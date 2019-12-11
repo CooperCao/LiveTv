@@ -1,3 +1,5 @@
+import groovy.xml.XmlUtil
+
 /*
  * Copyright (C) 2018 The Android Open Source Project
  *
@@ -125,8 +127,8 @@ preBuild {
                     " Platform"
             new Node(parsedXml.component[1], 'orderEntry',
                     ['type': 'jdk', 'jdkName': sdkString, 'jdkType': 'Android SDK'])
-            groovy.xml.XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
-        } catch (FileNotFoundException e) {
+            XmlUtil.serialize(parsedXml, new FileOutputStream(imlFile))
+        } catch (FileNotFoundException ignored) {
             // nop, iml not found
         }
     }
