@@ -108,30 +108,5 @@ lint/outputs/
 lint/tmp/
 # lint/reports/
 
-.gitignore
 .idea/
-Android.bp
-AndroidManifest.xml
-OWNERS
-README.md
-TV.iml
-assets/
-build.gradle
-common/
-gradle.properties
-gradle/
-gradlew
-gradlew.bat
-jni/
-libs/
-material_res/
-open_source_project.LICENSE
-open_source_project.README
-partner_support/
-proguard.flags
-res/
-settings.gradle
-src/
-tests/
-tuner/
-version.mk
+
