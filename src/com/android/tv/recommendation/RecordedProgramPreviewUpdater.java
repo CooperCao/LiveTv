@@ -18,14 +18,17 @@ package com.android.tv.recommendation;
 
 import android.content.Context;
 import android.os.Build;
-import android.support.annotation.RequiresApi;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
+
 import com.android.tv.TvSingletons;
 import com.android.tv.data.PreviewDataManager;
 import com.android.tv.data.PreviewProgramContent;
 import com.android.tv.dvr.DvrDataManager;
 import com.android.tv.dvr.data.RecordedProgram;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;

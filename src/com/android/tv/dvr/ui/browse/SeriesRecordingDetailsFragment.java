@@ -20,7 +20,7 @@ import android.content.res.Resources;
 import android.graphics.drawable.Drawable;
 import android.media.tv.TvInputManager;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import androidx.leanback.app.DetailsFragment;
 import androidx.leanback.widget.Action;

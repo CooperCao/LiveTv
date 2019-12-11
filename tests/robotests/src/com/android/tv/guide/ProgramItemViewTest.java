@@ -17,7 +17,7 @@ package com.android.tv.guide;
 
 import static com.google.android.libraries.testing.truth.TextViewSubject.assertThat;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.view.LayoutInflater;
 
 import com.android.tv.R;

@@ -18,9 +18,12 @@ package com.android.tv;
 
 import android.content.Context;
 import android.media.tv.TvTrackInfo;
-import android.support.annotation.IntDef;
 import android.util.SparseArray;
+
+import androidx.annotation.IntDef;
+
 import com.android.tv.data.DisplayMode;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.Locale;

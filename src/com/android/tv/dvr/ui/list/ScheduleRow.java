@@ -17,7 +17,7 @@
 package com.android.tv.dvr.ui.list;
 
 import android.content.Context;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.android.tv.common.SoftPreconditions;
 import com.android.tv.dvr.data.ScheduledRecording;
 import com.android.tv.dvr.ui.DvrUiHelper;

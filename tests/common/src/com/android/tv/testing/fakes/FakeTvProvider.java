@@ -43,7 +43,7 @@ import android.os.ParcelFileDescriptor;
 import android.os.ParcelFileDescriptor.AutoCloseInputStream;
 import android.preference.PreferenceManager;
 import android.provider.BaseColumns;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
 import androidx.tvprovider.media.tv.TvContractCompat;

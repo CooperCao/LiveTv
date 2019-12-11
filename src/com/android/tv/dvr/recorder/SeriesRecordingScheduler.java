@@ -22,7 +22,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Build;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 import android.text.TextUtils;
 import android.util.ArraySet;
 import android.util.Log;

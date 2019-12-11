@@ -25,14 +25,15 @@ import android.media.tv.TvInputInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.support.annotation.IntDef;
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.ViewGroup;
 import android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
 
 import com.android.tv.ChannelTuner;
 import com.android.tv.MainActivity;
@@ -44,6 +45,7 @@ import com.android.tv.TvSingletons;
 import com.android.tv.analytics.Tracker;
 import com.android.tv.common.WeakHandler;
 import com.android.tv.common.feature.CommonFeatures;
+import com.android.tv.common.flags.LegacyFlags;
 import com.android.tv.common.ui.setup.OnActionClickListener;
 import com.android.tv.common.ui.setup.SetupFragment;
 import com.android.tv.common.ui.setup.SetupMultiPaneFragment;
@@ -73,8 +75,6 @@ import com.android.tv.util.TvInputManagerHelper;
 
 import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
-
-import com.android.tv.common.flags.LegacyFlags;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;

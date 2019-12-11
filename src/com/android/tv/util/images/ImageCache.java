@@ -16,7 +16,7 @@
 
 package com.android.tv.util.images;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 import android.util.LruCache;
 import com.android.tv.common.memory.MemoryManageable;

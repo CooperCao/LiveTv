@@ -16,7 +16,7 @@
 
 package com.android.tv.menu;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.android.tv.R;
 import com.android.tv.data.api.Channel;
 

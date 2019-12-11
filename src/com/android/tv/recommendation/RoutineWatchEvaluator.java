@@ -16,8 +16,8 @@
 
 package com.android.tv.recommendation;
 
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 import android.text.TextUtils;
 
 import com.android.tv.data.api.Program;

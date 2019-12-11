@@ -18,9 +18,10 @@ package com.android.tv.audiotvservice;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
 
 /** Utility methods to start and stop audio only TV Player. */
 public final class AudioOnlyTvServiceUtil {

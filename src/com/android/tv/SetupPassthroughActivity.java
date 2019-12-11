@@ -24,7 +24,7 @@ import android.media.tv.TvInputInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 import android.util.Log;
 
 import com.android.tv.common.CommonConstants;

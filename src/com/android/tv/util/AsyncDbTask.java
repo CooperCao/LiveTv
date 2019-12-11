@@ -23,9 +23,9 @@ import android.media.tv.TvContract;
 import android.media.tv.TvContract.Programs;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.support.annotation.MainThread;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.MainThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import android.util.Log;
 import android.util.Range;
 

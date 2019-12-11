@@ -29,11 +29,12 @@ import android.media.session.PlaybackState;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.os.AsyncTask;
-import android.support.annotation.NonNull;
-import android.support.annotation.Nullable;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
+import androidx.annotation.VisibleForTesting;
 
 import com.android.tv.data.api.Channel;
 import com.android.tv.data.api.Program;

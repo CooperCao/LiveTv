@@ -18,13 +18,16 @@ package com.android.tv.dvr.ui.browse;
 
 import android.app.Activity;
 import android.content.Context;
-import android.support.annotation.CallSuper;
-import androidx.leanback.widget.Presenter;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+
+import androidx.annotation.CallSuper;
+import androidx.leanback.widget.Presenter;
+
 import com.android.tv.common.SoftPreconditions;
 import com.android.tv.dvr.ui.DvrUiHelper;
+
 import java.util.HashSet;
 import java.util.Set;
 

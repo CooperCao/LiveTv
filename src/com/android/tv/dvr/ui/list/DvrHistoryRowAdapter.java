@@ -19,7 +19,7 @@ package com.android.tv.dvr.ui.list;
 import android.annotation.TargetApi;
 import android.content.Context;
 import android.os.Build.VERSION_CODES;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.format.DateUtils;
 import android.util.Log;
 import androidx.leanback.widget.ArrayObjectAdapter;

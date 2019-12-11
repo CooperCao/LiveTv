@@ -23,7 +23,7 @@ import android.media.tv.TvContract;
 import android.media.tv.TvContract.Programs;
 import android.media.tv.TvInputManager;
 import android.os.SystemClock;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 import android.text.TextUtils;
 import android.util.Log;
 

@@ -30,15 +30,18 @@ import android.net.Uri;
 import android.os.Handler;
 import android.provider.Settings;
 import android.provider.Settings.SettingNotFoundException;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.ArrayMap;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.VisibleForTesting;
+
 import com.android.tv.common.SoftPreconditions;
 import com.android.tv.common.compat.TvInputInfoCompat;
 import com.android.tv.common.dagger.annotations.ApplicationContext;
+import com.android.tv.common.flags.LegacyFlags;
 import com.android.tv.common.util.CommonUtils;
 import com.android.tv.common.util.SystemProperties;
 import com.android.tv.features.TvFeatures;
@@ -46,8 +49,9 @@ import com.android.tv.parental.ContentRatingsManager;
 import com.android.tv.parental.ParentalControlSettings;
 import com.android.tv.util.images.ImageCache;
 import com.android.tv.util.images.ImageLoader;
+
 import com.google.common.collect.Ordering;
-import com.android.tv.common.flags.LegacyFlags;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -56,6 +60,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+
 import javax.inject.Inject;
 import javax.inject.Singleton;
 

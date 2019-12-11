@@ -21,7 +21,7 @@ import android.media.session.PlaybackState;
 import android.media.tv.TvTrackInfo;
 import android.media.tv.TvView;
 import android.net.Uri;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.android.tv.InputSessionManager;
 import com.android.tv.InputSessionManager.TvViewSession;
 import com.android.tv.TvSingletons;

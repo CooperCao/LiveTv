@@ -19,7 +19,7 @@ package com.android.tv.ui;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.os.Parcelable;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.leanback.app.DetailsFragment;
 import android.transition.Transition;
 import android.transition.Transition.TransitionListener;

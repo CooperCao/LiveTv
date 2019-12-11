@@ -20,8 +20,11 @@ import android.app.SearchManager;
 import android.content.UriMatcher;
 import android.media.tv.TvContract;
 import android.net.Uri;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
+
 import com.android.tv.search.LocalSearchProvider;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

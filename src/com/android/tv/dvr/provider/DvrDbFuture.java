@@ -17,7 +17,7 @@
 package com.android.tv.dvr.provider;
 
 import android.database.Cursor;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.android.tv.common.concurrent.NamedThreadFactory;

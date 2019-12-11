@@ -16,7 +16,7 @@
 
 package com.android.tv.menu;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.android.tv.ChannelTuner;
 import com.android.tv.TvOptionsManager;
 import com.android.tv.TvOptionsManager.OptionChangedListener;

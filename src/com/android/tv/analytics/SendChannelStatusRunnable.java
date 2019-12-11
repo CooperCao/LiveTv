@@ -19,7 +19,7 @@ package com.android.tv.analytics;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 import com.android.tv.data.ChannelDataManager;
 import com.android.tv.data.api.Channel;
 import com.android.tv.util.RecurringRunner;

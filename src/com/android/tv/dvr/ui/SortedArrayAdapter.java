@@ -16,7 +16,7 @@
 
 package com.android.tv.dvr.ui;
 
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.PresenterSelector;
 import com.android.tv.common.SoftPreconditions;

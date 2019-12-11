@@ -24,19 +24,22 @@ import android.animation.TimeInterpolator;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Rect;
-import android.support.annotation.UiThread;
-import androidx.recyclerview.widget.RecyclerView;
 import android.util.Log;
 import android.util.Property;
 import android.view.View;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.widget.TextView;
+
+import androidx.annotation.UiThread;
 import androidx.interpolator.view.animation.FastOutLinearInInterpolator;
 import androidx.interpolator.view.animation.FastOutSlowInInterpolator;
 import androidx.interpolator.view.animation.LinearOutSlowInInterpolator;
+import androidx.recyclerview.widget.RecyclerView;
+
 import com.android.tv.R;
 import com.android.tv.common.SoftPreconditions;
 import com.android.tv.util.Utils;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;

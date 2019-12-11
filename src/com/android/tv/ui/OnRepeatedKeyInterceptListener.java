@@ -16,7 +16,7 @@
 package com.android.tv.ui;
 
 import android.os.Message;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.leanback.widget.VerticalGridView;
 import android.util.Log;
 import android.view.KeyEvent;

@@ -17,7 +17,7 @@
 package com.android.tv.recommendation;
 
 import android.content.Context;
-import android.support.annotation.VisibleForTesting;
+import androidx.annotation.VisibleForTesting;
 
 import androidx.annotation.GuardedBy;
 

@@ -25,12 +25,14 @@ import android.media.tv.TvInputManager.TvInputCallback;
 import android.os.Build;
 import android.os.HandlerThread;
 import android.os.Looper;
-import android.support.annotation.MainThread;
-import android.support.annotation.RequiresApi;
-import android.support.annotation.VisibleForTesting;
 import android.util.ArrayMap;
 import android.util.Log;
 import android.util.Range;
+
+import androidx.annotation.MainThread;
+import androidx.annotation.RequiresApi;
+import androidx.annotation.VisibleForTesting;
+
 import com.android.tv.InputSessionManager;
 import com.android.tv.TvSingletons;
 import com.android.tv.common.SoftPreconditions;
@@ -45,6 +47,7 @@ import com.android.tv.dvr.WritableDvrDataManager;
 import com.android.tv.dvr.data.ScheduledRecording;
 import com.android.tv.util.TvInputManagerHelper;
 import com.android.tv.util.Utils;
+
 import java.util.Arrays;
 import java.util.List;
 import java.util.Map;

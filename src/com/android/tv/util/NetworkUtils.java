@@ -18,8 +18,8 @@ package com.android.tv.util;
 
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;

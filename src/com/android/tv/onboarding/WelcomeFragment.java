@@ -24,7 +24,7 @@ import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
 import android.content.Context;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.leanback.app.OnboardingFragment;
 import android.text.Editable;
 import android.text.TextWatcher;

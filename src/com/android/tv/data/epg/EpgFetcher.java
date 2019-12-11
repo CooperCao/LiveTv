@@ -19,7 +19,8 @@ package com.android.tv.data.epg;
 import android.app.job.JobParameters;
 import android.app.job.JobScheduler;
 import android.app.job.JobService;
-import android.support.annotation.MainThread;
+
+import androidx.annotation.MainThread;
 
 /** Fetch EPG routinely or on-demand during channel scanning */
 public interface EpgFetcher {

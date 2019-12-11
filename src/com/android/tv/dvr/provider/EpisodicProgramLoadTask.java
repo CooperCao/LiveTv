@@ -23,8 +23,8 @@ import android.media.tv.TvContract;
 import android.media.tv.TvContract.Programs;
 import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.Nullable;
-import android.support.annotation.WorkerThread;
+import androidx.annotation.Nullable;
+import androidx.annotation.WorkerThread;
 
 import com.android.tv.TvSingletons;
 import com.android.tv.common.SoftPreconditions;

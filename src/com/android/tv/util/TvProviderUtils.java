@@ -23,12 +23,15 @@ import android.media.tv.TvContract;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.annotation.StringDef;
-import android.support.annotation.VisibleForTesting;
-import android.support.annotation.WorkerThread;
 import android.util.Log;
+
+import androidx.annotation.StringDef;
+import androidx.annotation.VisibleForTesting;
+import androidx.annotation.WorkerThread;
+
 import com.android.tv.data.api.BaseProgram;
 import com.android.tv.features.PartnerFeatures;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;

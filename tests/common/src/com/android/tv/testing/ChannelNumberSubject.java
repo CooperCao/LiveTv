@@ -18,7 +18,7 @@ package com.android.tv.testing;
 
 import static com.google.common.truth.Fact.simpleFact;
 
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import com.android.tv.data.ChannelNumber;
 import com.google.common.truth.ComparableSubject;
 import com.google.common.truth.FailureMetadata;

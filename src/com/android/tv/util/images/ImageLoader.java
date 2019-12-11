@@ -24,12 +24,12 @@ import android.media.tv.TvInputInfo;
 import android.os.AsyncTask;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.WorkerThread;
 import android.util.ArraySet;
 import android.util.Log;
 
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.WorkerThread;
 import androidx.tvprovider.media.tv.TvContractCompat.PreviewPrograms;
 
 import com.android.tv.R;

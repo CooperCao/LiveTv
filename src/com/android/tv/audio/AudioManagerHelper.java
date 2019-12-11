@@ -21,7 +21,9 @@ import android.media.AudioAttributes;
 import android.media.AudioFocusRequest;
 import android.media.AudioManager;
 import android.os.Build;
-import android.support.annotation.Nullable;
+
+import androidx.annotation.Nullable;
+
 import com.android.tv.features.TvFeatures;
 import com.android.tv.ui.api.TunableTvViewPlayingApi;
 
@@ -34,7 +36,8 @@ public class AudioManagerHelper implements AudioManager.OnAudioFocusChangeListen
     private final Activity mActivity;
     private final TunableTvViewPlayingApi mTvView;
     private final AudioManager mAudioManager;
-    @Nullable private final AudioFocusRequest mFocusRequest;
+    @Nullable
+    private final AudioFocusRequest mFocusRequest;
 
     private int mAudioFocusStatus = AudioManager.AUDIOFOCUS_NONE;
 

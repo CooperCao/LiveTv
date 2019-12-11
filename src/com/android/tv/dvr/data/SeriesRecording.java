@@ -20,8 +20,9 @@ import android.content.ContentValues;
 import android.database.Cursor;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.annotation.IntDef;
 import android.text.TextUtils;
+
+import androidx.annotation.IntDef;
 
 import com.android.tv.data.BaseProgramImpl;
 import com.android.tv.data.api.BaseProgram;

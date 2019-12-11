@@ -18,11 +18,13 @@ package com.android.tv.ui.hideable;
 import android.content.Context;
 import android.os.Looper;
 import android.os.Message;
-import android.support.annotation.NonNull;
-import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
 import android.view.accessibility.AccessibilityManager;
 import android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener;
+
+import androidx.annotation.NonNull;
+import androidx.annotation.UiThread;
+import androidx.annotation.VisibleForTesting;
+
 import com.android.tv.common.WeakHandler;
 
 /**

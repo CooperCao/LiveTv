@@ -19,7 +19,7 @@ package com.android.tv.dvr.ui;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.leanback.app.GuidedStepFragment;
 import android.util.Log;
 import android.widget.Toast;

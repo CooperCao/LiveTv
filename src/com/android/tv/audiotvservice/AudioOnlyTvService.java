@@ -21,8 +21,10 @@ import android.content.Intent;
 import android.media.session.MediaSession;
 import android.net.Uri;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+
 import com.android.tv.data.ChannelImpl;
 import com.android.tv.data.StreamInfo;
 import com.android.tv.data.api.Channel;
@@ -35,7 +37,8 @@ public class AudioOnlyTvService extends Service implements OnTuneListener {
     private static final String TAG = "AudioOnlyTvService";
     private static final int NOTIFICATION_ID = 1;
 
-    @Nullable private String mTvInputId;
+    @Nullable
+    private String mTvInputId;
     private TunableTvView mTvView;
     // TODO(b/110969180): perhaps use MediaSessionWrapper
     private MediaSession mMediaSession;

@@ -21,11 +21,13 @@ import android.animation.AnimatorInflater;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
 import android.content.res.Resources;
-import android.support.annotation.IntDef;
-import android.support.annotation.VisibleForTesting;
-import androidx.leanback.widget.HorizontalGridView;
 import android.util.Log;
 import android.view.accessibility.AccessibilityManager.AccessibilityStateChangeListener;
+
+import androidx.annotation.IntDef;
+import androidx.annotation.VisibleForTesting;
+import androidx.leanback.widget.HorizontalGridView;
+
 import com.android.tv.ChannelTuner;
 import com.android.tv.R;
 import com.android.tv.TvOptionsManager;
@@ -38,6 +40,7 @@ import com.android.tv.menu.MenuRowFactory.TvOptionsRow;
 import com.android.tv.ui.TunableTvView;
 import com.android.tv.ui.hideable.AutoHideScheduler;
 import com.android.tv.util.ViewCache;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.util.ArrayList;

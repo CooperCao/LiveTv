@@ -18,7 +18,6 @@ package com.android.tv.ui;
 
 import android.animation.Animator;
 import android.animation.AnimatorInflater;
-import android.support.annotation.IntDef;
 import android.transition.Fade;
 import android.transition.Scene;
 import android.transition.Transition;
@@ -30,9 +29,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
+
+import androidx.annotation.IntDef;
+
 import com.android.tv.MainActivity;
 import com.android.tv.R;
 import com.android.tv.data.api.Channel;
+
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 

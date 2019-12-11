@@ -19,7 +19,8 @@ package com.android.tv.dvr;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.media.tv.TvInputManager;
-import android.support.annotation.IntDef;
+
+import androidx.annotation.IntDef;
 
 import com.android.tv.common.util.SharedPreferencesUtils;
 import com.android.tv.dvr.data.RecordedProgram;

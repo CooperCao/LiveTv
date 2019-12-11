@@ -19,7 +19,7 @@ package com.android.tv.parental;
 import android.content.Context;
 import android.media.tv.TvContentRating;
 import android.media.tv.TvContentRatingSystemInfo;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import android.text.TextUtils;
 import com.android.tv.R;
 import com.android.tv.common.util.PermissionUtils;

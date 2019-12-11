@@ -25,7 +25,7 @@ import android.media.tv.TvContract;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.RemoteException;
-import android.support.annotation.MainThread;
+import androidx.annotation.MainThread;
 import android.text.TextUtils;
 import android.util.Log;
 import com.android.tv.common.util.PermissionUtils;

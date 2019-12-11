@@ -18,7 +18,7 @@ package com.android.tv.dvr.ui.playback;
 
 import android.media.tv.TvTrackInfo;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.leanback.app.GuidedStepFragment;
 import androidx.leanback.widget.GuidedAction;
 import android.text.TextUtils;

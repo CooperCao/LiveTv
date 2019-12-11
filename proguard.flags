@@ -61,9 +61,9 @@
 }
 
 # For tests
--keep @android.support.annotation.VisibleForTesting class *  {*;}
+-keep @androidx.annotation.VisibleForTesting class *  {*;}
 -keepclasseswithmembers class * {
-    @android.support.annotation.VisibleForTesting <methods>;
+    @androidx.annotation.VisibleForTesting <methods>;
 }
 
 # Grpc used by epg via reflection

@@ -23,17 +23,20 @@ import android.database.Cursor;
 import android.media.tv.TvContract;
 import android.media.tv.TvInputInfo;
 import android.net.Uri;
-import android.support.annotation.Nullable;
-import android.support.annotation.UiThread;
-import android.support.annotation.VisibleForTesting;
 import android.text.TextUtils;
 import android.util.Log;
+
+import androidx.annotation.Nullable;
+import androidx.annotation.UiThread;
+import androidx.annotation.VisibleForTesting;
+
 import com.android.tv.common.CommonConstants;
 import com.android.tv.common.util.CommonUtils;
 import com.android.tv.data.api.Channel;
 import com.android.tv.util.TvInputManagerHelper;
 import com.android.tv.util.Utils;
 import com.android.tv.util.images.ImageLoader;
+
 import java.net.URISyntaxException;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -302,15 +305,18 @@ public final class ChannelImpl implements Channel {
         return mLocked;
     }
 
+    @Override
     public void setBrowsable(boolean browsable) {
         mBrowsable = browsable;
     }
 
+    @Override
     public void setLocked(boolean locked) {
         mLocked = locked;
     }
 
     /** Sets channel logo uri which is got from cloud. */
+    @Override
     public void setLogoUri(String logoUri) {
         mLogoUri = logoUri;
     }
@@ -595,6 +601,7 @@ public final class ChannelImpl implements Channel {
     }
 
     /** Prefetches the images for this channel. */
+    @Override
     public void prefetchImage(Context context, int type, int maxWidth, int maxHeight) {
         String uriString = getImageUriString(type);
         if (!TextUtils.isEmpty(uriString)) {
@@ -616,6 +623,7 @@ public final class ChannelImpl implements Channel {
      * @param maxHeight The max height of the loaded bitmap.
      * @param callback A callback which will be called after the loading finished.
      */
+    @Override
     @UiThread
     public void loadBitmap(
             Context context,
@@ -637,6 +645,7 @@ public final class ChannelImpl implements Channel {
     }
 
     /** Returns if channel logo exists. */
+    @Override
     public boolean channelLogoExists() {
         return mChannelLogoExist;
     }
@@ -648,6 +657,7 @@ public final class ChannelImpl implements Channel {
      * the channel has leanback launch intent, and it returns {@link Channel#APP_LINK_TYPE_NONE}
      * otherwise.
      */
+    @Override
     public int getAppLinkType(Context context) {
         if (mAppLinkType == APP_LINK_TYPE_NOT_SET) {
             initAppLinkTypeAndIntent(context);
@@ -659,6 +669,7 @@ public final class ChannelImpl implements Channel {
      * Returns the app link intent for this channel. If the type of app link is {@link
      * Channel#APP_LINK_TYPE_NONE}, it returns {@code null}.
      */
+    @Override
     public Intent getAppLinkIntent(Context context) {
         if (mAppLinkType == APP_LINK_TYPE_NOT_SET) {
             initAppLinkTypeAndIntent(context);

@@ -17,7 +17,7 @@
 package com.android.tv.util.account;
 
 import android.accounts.Account;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 
 /** Helper methods for getting and selecting a user account. */
 public interface AccountHelper {

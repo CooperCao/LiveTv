@@ -16,7 +16,7 @@
 
 package com.android.tv.data.epg;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 
 import com.android.tv.data.Lineup;
 import com.android.tv.data.api.Channel;

@@ -21,7 +21,7 @@ import android.content.res.Resources;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
 import android.media.tv.TvInputManager.TvInputCallback;
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import androidx.leanback.widget.VerticalGridView;
 import androidx.recyclerview.widget.RecyclerView;
 import android.text.TextUtils;

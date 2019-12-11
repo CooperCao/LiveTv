@@ -16,7 +16,7 @@
 
 package com.android.tv.data;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import com.android.tv.common.util.StringUtils;

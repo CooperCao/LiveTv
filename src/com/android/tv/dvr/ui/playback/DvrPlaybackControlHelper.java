@@ -25,7 +25,7 @@ import android.media.session.MediaController.TransportControls;
 import android.media.session.PlaybackState;
 import android.media.tv.TvTrackInfo;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.leanback.media.PlaybackControlGlue;
 import androidx.leanback.widget.AbstractDetailsDescriptionPresenter;
 import androidx.leanback.widget.Action;

@@ -16,7 +16,7 @@
 
 package com.android.tv.dvr.ui;
 
-import android.support.annotation.NonNull;
+import androidx.annotation.NonNull;
 import com.android.tv.common.SoftPreconditions;
 import java.util.HashMap;
 import java.util.Map;

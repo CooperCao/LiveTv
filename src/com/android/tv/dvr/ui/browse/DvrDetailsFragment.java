@@ -24,7 +24,7 @@ import android.graphics.drawable.Drawable;
 import android.media.tv.TvContentRating;
 import android.net.Uri;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
+import androidx.annotation.Nullable;
 import androidx.leanback.app.DetailsFragment;
 import androidx.leanback.widget.ArrayObjectAdapter;
 import androidx.leanback.widget.ClassPresenterSelector;
