@@ -85,7 +85,7 @@ public class ScanFragment extends SetupFragment {
     private static final int CJ_MUSIC_CHANNEL_FREQUENCY = 585000000;
 
     private static final long CHANNEL_SCAN_SHOW_DELAY_MS = 10000;
-    private static final long CHANNEL_SCAN_PERIOD_MS = 4000*10;
+    private static final long CHANNEL_SCAN_PERIOD_MS = 4000;
     private static final long SHOW_PROGRESS_DIALOG_DELAY_MS = 300;
 
     // Build channels out of the locally stored TS streams.
