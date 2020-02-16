@@ -31,6 +31,6 @@ public final class DefaultDvrFlags
 
     @Override
     public boolean storeVideoAspectRatio() {
-        return false;
+        return true;
     }
 }

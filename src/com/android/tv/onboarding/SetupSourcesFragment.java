@@ -22,6 +22,7 @@ import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager.TvInputCallback;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +48,8 @@ import com.google.common.base.Optional;
 
 import dagger.android.AndroidInjection;
 import dagger.android.ContributesAndroidInjector;
+
+import com.android.tv.common.flags.UiFlags;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -121,6 +124,7 @@ public class SetupSourcesFragment extends SetupMultiPaneFragment {
         @Inject ChannelDataManager mChannelDataManager;
         @Inject SetupUtils mSetupUtils;
         @Inject Optional<BuiltInTunerManager> mBuiltInTunerManagerOptional;
+        @Inject UiFlags mUiFlags;
         private List<TvInputInfo> mInputs;
         private int mKnownInputStartIndex;
         private int mDoneInputStartIndex;
@@ -230,7 +234,7 @@ public class SetupSourcesFragment extends SetupMultiPaneFragment {
         @Override
         public Guidance onCreateGuidance(Bundle savedInstanceState) {
             String title = getString(R.string.setup_sources_text);
-            String description = getString(R.string.setup_sources_description);
+            String description = getString(R.string.setup_sources_description2);
             return new Guidance(title, description, null, null);
         }
 
@@ -342,16 +346,17 @@ public class SetupSourcesFragment extends SetupMultiPaneFragment {
                 ++position;
                 actions.add(GuidedActionsStylistWithDivider.createDividerAction(getContext()));
             }
-            // online store action
-            ++position;
-            actions.add(
-                    new GuidedAction.Builder(getActivity())
-                            .id(ACTION_ONLINE_STORE)
-                            .title(getString(R.string.setup_store_action_title))
-                            .description(getString(R.string.setup_store_action_description))
-                            .icon(R.drawable.ic_app_store)
-                            .build());
-
+            if (!TextUtils.isEmpty(mUiFlags.moreChannelsUrl())) {
+                // online store action
+                ++position;
+                actions.add(
+                        new GuidedAction.Builder(getActivity())
+                                .id(ACTION_ONLINE_STORE)
+                                .title(getString(R.string.setup_store_action_title))
+                                .description(getString(R.string.setup_store_action_description))
+                                .icon(R.drawable.ic_app_store)
+                                .build());
+            }
             if (newPosition != -1) {
                 VerticalGridView gridView = getGuidedActionsStylist().getActionsGridView();
                 gridView.setSelectedPosition(newPosition);

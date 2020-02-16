@@ -25,7 +25,9 @@ import android.content.pm.PackageManager;
 import android.media.tv.TvInputInfo;
 import android.os.Bundle;
 import androidx.annotation.NonNull;
+import android.util.Log;
 import android.widget.Toast;
+
 import com.android.tv.R;
 import com.android.tv.SetupPassthroughActivity;
 import com.android.tv.TvSingletons;
@@ -37,11 +39,16 @@ import com.android.tv.data.ChannelDataManager;
 import com.android.tv.util.OnboardingUtils;
 import com.android.tv.util.SetupUtils;
 import com.android.tv.util.TvInputManagerHelper;
+
 import dagger.android.AndroidInjection;
 import dagger.android.ContributesAndroidInjector;
+
+import com.android.tv.common.flags.UiFlags;
+
 import javax.inject.Inject;
 
 public class OnboardingActivity extends SetupActivity {
+    private static final String TAG = "OnboardingActivity";
     private static final String KEY_INTENT_AFTER_COMPLETION = "key_intent_after_completion";
 
     private static final int PERMISSIONS_REQUEST_READ_TV_LISTINGS = 1;
@@ -53,6 +60,7 @@ public class OnboardingActivity extends SetupActivity {
     @Inject ChannelDataManager mChannelDataManager;
     private TvInputManagerHelper mInputManager;
     @Inject SetupUtils mSetupUtils;
+    @Inject UiFlags mUiFlags;
     private final ChannelDataManager.Listener mChannelListener =
             new ChannelDataManager.Listener() {
                 @Override
@@ -149,8 +157,17 @@ public class OnboardingActivity extends SetupActivity {
     }
 
     private void showMerchantCollection() {
-        executeActionWithDelay(
-                () -> startActivity(OnboardingUtils.ONLINE_STORE_INTENT), SHOW_RIPPLE_DURATION_MS);
+        Intent onlineStoreIntent = OnboardingUtils.createOnlineStoreIntent(mUiFlags);
+        if (onlineStoreIntent != null) {
+            executeActionWithDelay(
+                    () -> startActivity(OnboardingUtils.createOnlineStoreIntent(mUiFlags)),
+                    SHOW_RIPPLE_DURATION_MS);
+        } else {
+            Log.w(
+                    TAG,
+                    "Unable to show merchant collection, more channels url is not valid. url is "
+                            + mUiFlags.moreChannelsUrl());
+        }
     }
 
     @Override

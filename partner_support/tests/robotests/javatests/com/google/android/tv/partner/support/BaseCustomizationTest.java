@@ -28,11 +28,10 @@ import android.content.pm.PackageManager;
 import com.android.tv.testing.TestSingletonApp;
 import com.android.tv.testing.constants.ConfigConstants;
 
-import com.google.thirdparty.robolectric.GoogleRobolectricTestRunner;
-
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
 
@@ -43,7 +42,7 @@ import java.util.List;
 
 // TODO: move to partner-support
 
-@RunWith(GoogleRobolectricTestRunner.class)
+@RunWith(RobolectricTestRunner.class)
 @Config(sdk = ConfigConstants.SDK, application = TestSingletonApp.class)
 public class BaseCustomizationTest {
 

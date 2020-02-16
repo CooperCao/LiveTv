@@ -19,28 +19,43 @@ package com.android.tv.menu;
 import android.content.Context;
 import androidx.annotation.Nullable;
 import android.text.TextUtils;
+
 import com.android.tv.MainActivity;
 import com.android.tv.R;
 import com.android.tv.common.customization.CustomAction;
 import com.android.tv.common.customization.CustomizationManager;
+import com.android.tv.menu.MenuRowFactory.Factory;
 import com.android.tv.ui.TunableTvView;
-import com.android.tv.common.flags.LegacyFlags;
+
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
+
 import java.util.List;
 
 /** A factory class to create menu rows. */
+@AutoFactory(implementing = Factory.class)
 public class MenuRowFactory {
+
+    /** Factory for a {@link MenuRowFactory}. */
+    public interface Factory {
+        /** Creates a {@link MenuRowFactory} */
+        MenuRowFactory create(MainActivity mainActivity, TunableTvView tvView);
+    }
+
     private final MainActivity mMainActivity;
     private final TunableTvView mTvView;
     private final CustomizationManager mCustomizationManager;
-    private final LegacyFlags mLegacyFlags;
+    private final TvOptionsRowAdapter.Factory mTvOptionsRowAdapterFactory;
 
     /** A constructor. */
     public MenuRowFactory(
-            MainActivity mainActivity, TunableTvView tvView, LegacyFlags mLegacyFlags) {
+            MainActivity mainActivity,
+            TunableTvView tvView,
+            @Provided TvOptionsRowAdapter.Factory tvOptionsRowAdapterFactory) {
         mMainActivity = mainActivity;
         mTvView = tvView;
         mCustomizationManager = new CustomizationManager(mainActivity);
-        this.mLegacyFlags = mLegacyFlags;
+        mTvOptionsRowAdapterFactory = tvOptionsRowAdapterFactory;
         mCustomizationManager.initialize();
     }
 
@@ -65,7 +80,7 @@ public class MenuRowFactory {
                     mMainActivity,
                     menu,
                     mCustomizationManager.getCustomActions(CustomizationManager.ID_OPTIONS_ROW),
-                    mLegacyFlags);
+                    mTvOptionsRowAdapterFactory);
         }
         return null;
     }
@@ -78,14 +93,14 @@ public class MenuRowFactory {
         private TvOptionsRow(
                 Context context,
                 Menu menu,
-                List<CustomAction> customActions,
-                LegacyFlags legacyFlags) {
+                @Nullable List<CustomAction> customActions,
+                TvOptionsRowAdapter.Factory tvOptionsRowAdapterFactory) {
             super(
                     context,
                     menu,
                     R.string.menu_title_options,
                     R.dimen.action_card_height,
-                    new TvOptionsRowAdapter(context, customActions, legacyFlags));
+                    tvOptionsRowAdapterFactory.create(context, customActions));
         }
     }
 

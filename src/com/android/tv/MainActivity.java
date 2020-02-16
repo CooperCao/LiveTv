@@ -71,8 +71,6 @@ import androidx.annotation.Nullable;
 import androidx.annotation.VisibleForTesting;
 
 import com.android.tv.MainActivity.MySingletons;
-import com.android.tv.analytics.SendChannelStatusRunnable;
-import com.android.tv.analytics.SendConfigInfoRunnable;
 import com.android.tv.analytics.Tracker;
 import com.android.tv.audio.AudioManagerHelper;
 import com.android.tv.audiotvservice.AudioOnlyTvServiceUtil;
@@ -85,9 +83,6 @@ import com.android.tv.common.WeakHandler;
 import com.android.tv.common.compat.TvInputInfoCompat;
 import com.android.tv.common.dev.DeveloperPreferences;
 import com.android.tv.common.feature.CommonFeatures;
-import com.android.tv.common.flags.BackendKnobsFlags;
-import com.android.tv.common.flags.LegacyFlags;
-import com.android.tv.common.flags.StartupFlags;
 import com.android.tv.common.memory.MemoryManageable;
 import com.android.tv.common.singletons.HasSingletons;
 import com.android.tv.common.ui.setup.OnActionClickListener;
@@ -114,6 +109,9 @@ import com.android.tv.dialog.SafeDismissDialogFragment;
 import com.android.tv.dvr.DvrManager;
 import com.android.tv.dvr.data.ScheduledRecording;
 import com.android.tv.dvr.recorder.ConflictChecker;
+import com.android.tv.dvr.ui.DvrAlreadyRecordedFragment;
+import com.android.tv.dvr.ui.DvrAlreadyScheduledFragment;
+import com.android.tv.dvr.ui.DvrScheduleFragment;
 import com.android.tv.dvr.ui.DvrStopRecordingFragment;
 import com.android.tv.dvr.ui.DvrUiHelper;
 import com.android.tv.features.TvFeatures;
@@ -153,7 +151,6 @@ import com.android.tv.util.AsyncDbTask;
 import com.android.tv.util.AsyncDbTask.DbExecutor;
 import com.android.tv.util.CaptionSettings;
 import com.android.tv.util.OnboardingUtils;
-import com.android.tv.util.RecurringRunner;
 import com.android.tv.util.SetupUtils;
 import com.android.tv.util.TvInputManagerHelper;
 import com.android.tv.util.TvSettings;
@@ -164,6 +161,17 @@ import com.android.tv.util.account.AccountHelper;
 import com.android.tv.util.images.ImageCache;
 
 import com.google.common.base.Optional;
+
+import dagger.android.AndroidInjection;
+import dagger.android.AndroidInjector;
+import dagger.android.ContributesAndroidInjector;
+import dagger.android.DispatchingAndroidInjector;
+import dagger.android.HasAndroidInjector;
+
+import com.android.tv.common.flags.BackendKnobsFlags;
+import com.android.tv.common.flags.LegacyFlags;
+import com.android.tv.common.flags.StartupFlags;
+import com.android.tv.common.flags.UiFlags;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -178,12 +186,6 @@ import java.util.concurrent.TimeUnit;
 
 import javax.inject.Inject;
 import javax.inject.Provider;
-
-import dagger.android.AndroidInjection;
-import dagger.android.AndroidInjector;
-import dagger.android.ContributesAndroidInjector;
-import dagger.android.DispatchingAndroidInjector;
-import dagger.android.HasAndroidInjector;
 
 /** The main activity for the TV app. */
 public class MainActivity extends Activity
@@ -275,6 +277,7 @@ public class MainActivity extends Activity
     private static final long LAZY_INITIALIZATION_DELAY = TimeUnit.SECONDS.toMillis(1);
 
     private static final int UNDEFINED_TRACK_INDEX = -1;
+    private static final int HIGHEST_PRIORITY = -1;
     private static final long START_UP_TIMER_RESET_THRESHOLD_MS = TimeUnit.SECONDS.toMillis(3);
 
     {
@@ -301,6 +304,7 @@ public class MainActivity extends Activity
     @Inject BackendKnobsFlags mBackendKnobs;
     @Inject LegacyFlags mLegacyFlags;
     @Inject StartupFlags mStartupFlags;
+    @Inject UiFlags mUiFlags;
     @Inject SetupUtils mSetupUtils;
     @Inject Optional<BuiltInTunerManager> mOptionalBuiltInTunerManager;
     @Inject AccountHelper mAccountHelper;
@@ -358,9 +362,6 @@ public class MainActivity extends Activity
 
     private static final int MAX_RECENT_CHANNELS = 5;
     private final ArrayDeque<Long> mRecentChannels = new ArrayDeque<>(MAX_RECENT_CHANNELS);
-
-    private RecurringRunner mSendConfigInfoRecurringRunner;
-    private RecurringRunner mChannelStatusRecurringRunner;
 
     private String mLastInputIdFromIntent;
 
@@ -721,17 +722,6 @@ public class MainActivity extends Activity
             finish();
             return;
         }
-
-        mSendConfigInfoRecurringRunner =
-                new RecurringRunner(
-                        this,
-                        TimeUnit.DAYS.toMillis(1),
-                        new SendConfigInfoRunnable(mTracker, mTvInputManagerHelper),
-                        null);
-        mSendConfigInfoRecurringRunner.start();
-        mChannelStatusRecurringRunner =
-                SendChannelStatusRunnable.startChannelStatusRecurringRunner(
-                        this, mTracker, mChannelDataManager);
 
         if (CommonFeatures.DVR.isEnabled(this)
                 && TvFeatures.SHOW_UPCOMING_CONFLICT_DIALOG.isEnabled(this)) {
@@ -1298,7 +1288,15 @@ public class MainActivity extends Activity
     }
 
     public void showMerchantCollection() {
-        startActivitySafe(OnboardingUtils.ONLINE_STORE_INTENT);
+        Intent onlineStoreIntent = OnboardingUtils.createOnlineStoreIntent(mUiFlags);
+        if (onlineStoreIntent != null) {
+            startActivitySafe(onlineStoreIntent);
+        } else {
+            Log.w(
+                    TAG,
+                    "Unable to show merchant collection, more channels url is not valid. url is "
+                            + mUiFlags.moreChannelsUrl());
+        }
     }
 
     /**
@@ -1975,62 +1973,18 @@ public class MainActivity extends Activity
         mTvView.setClosedCaptionEnabled(enabled);
 
         String selectedTrackId = getSelectedTrack(TvTrackInfo.TYPE_SUBTITLE);
-        TvTrackInfo alternativeTrack = null;
-        int alternativeTrackIndex = UNDEFINED_TRACK_INDEX;
         if (enabled) {
             String language = mCaptionSettings.getLanguage();
             String trackId = mCaptionSettings.getTrackId();
-            for (int i = 0; i < tracks.size(); i++) {
-                TvTrackInfo track = tracks.get(i);
-                if (Utils.isEqualLanguage(track.getLanguage(), language)) {
-                    if (track.getId().equals(trackId)) {
-                        if (!track.getId().equals(selectedTrackId)) {
-                            selectTrack(TvTrackInfo.TYPE_SUBTITLE, track, i);
-                        } else {
-                            // Already selected. Update the option string only.
-                            mTvOptionsManager.onClosedCaptionsChanged(track, i);
-                        }
-                        if (DEBUG) {
-                            Log.d(
-                                    TAG,
-                                    "Subtitle Track Selected {id="
-                                            + track.getId()
-                                            + ", language="
-                                            + track.getLanguage()
-                                            + "}");
-                        }
-                        return;
-                    } else if (alternativeTrack == null) {
-                        alternativeTrack = track;
-                        alternativeTrackIndex = i;
-                    }
-                }
-            }
-            if (alternativeTrack != null) {
-                if (!alternativeTrack.getId().equals(selectedTrackId)) {
-                    selectTrack(TvTrackInfo.TYPE_SUBTITLE, alternativeTrack, alternativeTrackIndex);
-                } else {
-                    mTvOptionsManager.onClosedCaptionsChanged(
-                            alternativeTrack, alternativeTrackIndex);
-                }
-                if (DEBUG) {
-                    Log.d(
-                            TAG,
-                            "Subtitle Track Selected {id="
-                                    + alternativeTrack.getId()
-                                    + ", language="
-                                    + alternativeTrack.getLanguage()
-                                    + "}");
-                }
+            List<String> preferredLanguages = mCaptionSettings.getSystemPreferenceLanguageList();
+            int bestTrackIndex =
+                    findBestCaptionTrackIndex(tracks, language, preferredLanguages, trackId);
+            if (bestTrackIndex != UNDEFINED_TRACK_INDEX) {
+                selectCaptionTrack(selectedTrackId, tracks.get(bestTrackIndex), bestTrackIndex);
                 return;
             }
         }
-        if (selectedTrackId != null) {
-            selectTrack(TvTrackInfo.TYPE_SUBTITLE, null, UNDEFINED_TRACK_INDEX);
-            if (DEBUG) Log.d(TAG, "Subtitle Track Unselected");
-            return;
-        }
-        mTvOptionsManager.onClosedCaptionsChanged(null, UNDEFINED_TRACK_INDEX);
+        deselectCaptionTrack(selectedTrackId);
     }
 
     public void showProgramGuideSearchFragment() {
@@ -2082,14 +2036,6 @@ public class MainActivity extends Activity
         }
         mHandler.removeCallbacksAndMessages(null);
         application.getMainActivityWrapper().onMainActivityDestroyed(this);
-        if (mSendConfigInfoRecurringRunner != null) {
-            mSendConfigInfoRecurringRunner.stop();
-            mSendConfigInfoRecurringRunner = null;
-        }
-        if (mChannelStatusRecurringRunner != null) {
-            mChannelStatusRecurringRunner.stop();
-            mChannelStatusRecurringRunner = null;
-        }
         if (mTvInputManagerHelper != null) {
             mTvInputManagerHelper.clearTvInputLabels();
             if (mOptionalBuiltInTunerManager.isPresent()) {
@@ -2602,6 +2548,47 @@ public class MainActivity extends Activity
         return mTvView.getSelectedTrack(type);
     }
 
+    @VisibleForTesting
+    static int findBestCaptionTrackIndex(
+            List<TvTrackInfo> tracks,
+            String selectedLanguage,
+            List<String> preferredLanguages,
+            String selectedTrackId) {
+        int alternativeTrackIndex = UNDEFINED_TRACK_INDEX;
+        // Priority of selected alternative track, where -1 being the highest priority.
+        int alternativeTrackPriority = preferredLanguages.size();
+        for (int i = 0; i < tracks.size(); i++) {
+            TvTrackInfo track = tracks.get(i);
+            if (Utils.isEqualLanguage(track.getLanguage(), selectedLanguage)) {
+                if (track.getId().equals(selectedTrackId)) {
+                    return i;
+                } else if (alternativeTrackPriority != HIGHEST_PRIORITY) {
+                    alternativeTrackIndex = i;
+                    alternativeTrackPriority = HIGHEST_PRIORITY;
+                }
+            } else {
+                // Select alternative track in order of preference
+                // 1. User language captions
+                // 2. System language captions
+                // 3. Other captions
+                int index = UNDEFINED_TRACK_INDEX;
+                for (int j = 0; j < preferredLanguages.size(); j++) {
+                    if (Utils.isEqualLanguage(track.getLanguage(), preferredLanguages.get(j))) {
+                        index = j;
+                        break;
+                    }
+                }
+                if (index != UNDEFINED_TRACK_INDEX && index < alternativeTrackPriority) {
+                    alternativeTrackIndex = i;
+                    alternativeTrackPriority = index;
+                } else if (alternativeTrackIndex == UNDEFINED_TRACK_INDEX) {
+                    alternativeTrackIndex = i;
+                }
+            }
+        }
+        return alternativeTrackIndex;
+    }
+
     private void selectTrack(int type, TvTrackInfo track, int trackIndex) {
         mTvView.selectTrack(type, track == null ? null : track.getId());
         if (type == TvTrackInfo.TYPE_AUDIO) {
@@ -2611,6 +2598,33 @@ public class MainActivity extends Activity
                             : TvTrackInfoUtils.getMultiAudioString(this, track, false));
         } else if (type == TvTrackInfo.TYPE_SUBTITLE) {
             mTvOptionsManager.onClosedCaptionsChanged(track, trackIndex);
+        }
+    }
+
+    private void selectCaptionTrack(String selectedTrackId, TvTrackInfo track, int trackIndex) {
+        if (!track.getId().equals(selectedTrackId)) {
+            selectTrack(TvTrackInfo.TYPE_SUBTITLE, track, trackIndex);
+        } else {
+            // Already selected. Update the option string only.
+            mTvOptionsManager.onClosedCaptionsChanged(track, trackIndex);
+        }
+        if (DEBUG) {
+            Log.d(
+                    TAG,
+                    "Subtitle Track Selected {id="
+                            + track.getId()
+                            + ", language="
+                            + track.getLanguage()
+                            + "}");
+        }
+    }
+
+    private void deselectCaptionTrack(String selectedTrackId) {
+        if (selectedTrackId != null) {
+            selectTrack(TvTrackInfo.TYPE_SUBTITLE, null, UNDEFINED_TRACK_INDEX);
+            if (DEBUG) Log.d(TAG, "Subtitle Track Unselected");
+        } else {
+            mTvOptionsManager.onClosedCaptionsChanged(null, UNDEFINED_TRACK_INDEX);
         }
     }
 
@@ -3020,5 +3034,14 @@ public class MainActivity extends Activity
 
         @ContributesAndroidInjector
         abstract ProgramItemView contributesProgramItemView();
+
+        @ContributesAndroidInjector
+        abstract DvrAlreadyRecordedFragment contributesDvrAlreadyRecordedFragment();
+
+        @ContributesAndroidInjector
+        abstract DvrAlreadyScheduledFragment contributesDvrAlreadyScheduledFragment();
+
+        @ContributesAndroidInjector
+        abstract DvrScheduleFragment contributesDvrScheduleFragment();
     }
 }

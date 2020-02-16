@@ -31,12 +31,17 @@ public class DefaultUiFlags implements UiFlags {
     }
 
     @Override
-    public boolean uhideLauncher() {
-        return false;
+    public long maxHistoryDays() {
+        return 0;
     }
 
     @Override
-    public long maxHistoryDays() {
-        return 0;
+    public String moreChannelsUrl() {
+        return "";
+    }
+
+    @Override
+    public boolean unhideLauncher() {
+        return false;
     }
 }

@@ -27,8 +27,4 @@ public final class DefaultMessagesFlags
         return true;
     }
 
-    @Override
-    public boolean setupSourcesDescription2() {
-        return false;
-    }
 }

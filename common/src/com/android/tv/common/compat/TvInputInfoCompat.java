@@ -30,7 +30,11 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
-/** TIF Compatibility for {@link TvInputInfo}. */
+import org.xmlpull.v1.XmlPullParser;
+
+/**
+ * TIF Compatibility for {@link TvInputInfo}.
+ */
 public class TvInputInfoCompat {
     private static final String TAG = "TvInputInfoCompat";
     private static final String ATTRIBUTE_NAMESPACE_ANDROID =
@@ -77,15 +81,12 @@ public class TvInputInfoCompat {
             XmlPullParser parser = getXmlResourceParser();
             int type;
             while ((type = parser.next()) != XmlPullParser.END_DOCUMENT
-                    && type != XmlPullParser.START_TAG) {}
+                    && type != XmlPullParser.START_TAG) {
+            }
 
             if (!TV_INPUT_XML_START_TAG_NAME.equals(parser.getName())) {
-                Log.w(
-                        TAG,
-                        "Meta-data does not start with "
-                                + TV_INPUT_XML_START_TAG_NAME
-                                + " tag for "
-                                + si.name);
+                Log.w(TAG, "Meta-data does not start with " + TV_INPUT_XML_START_TAG_NAME
+                        + " tag for " + si.name);
                 return Collections.emptyMap();
             }
             // <tv-input> start tag found
@@ -109,7 +110,7 @@ public class TvInputInfoCompat {
             }
 
         } catch (Exception e) {
-            Log.e(TAG, "Failed to get extras of " + mTvInputInfo.getId(), e);
+            Log.e(TAG, "Failed to get extras of " + mTvInputInfo.getId() , e);
         }
         return Collections.emptyMap();
     }

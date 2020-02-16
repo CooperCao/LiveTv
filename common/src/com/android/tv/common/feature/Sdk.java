@@ -23,8 +23,6 @@ import android.os.Build.VERSION_CODES;
 /** Holder for SDK version features */
 public final class Sdk {
 
-    public static final Feature AT_LEAST_M = new AtLeast(VERSION_CODES.M);
-
     public static final Feature AT_LEAST_N = new AtLeast(VERSION_CODES.N);
 
     public static final Feature AT_LEAST_O = new AtLeast(VERSION_CODES.O);

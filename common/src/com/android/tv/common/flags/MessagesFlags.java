@@ -32,7 +32,4 @@ public interface MessagesFlags {
      * code generation.
      */
     boolean compiled();
-
-    /** Use setup_sources_description2 */
-    boolean setupSourcesDescription2();
 }

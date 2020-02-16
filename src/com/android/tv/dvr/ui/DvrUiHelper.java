@@ -78,7 +78,6 @@ import com.android.tv.util.ToastUtils;
 import com.android.tv.util.Utils;
 
 import com.google.common.collect.ImmutableList;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -496,7 +495,9 @@ public class DvrUiHelper {
                             startSeriesSettingsActivityInternal(
                                     context,
                                     seriesRecordingId,
-                                    loadedPrograms == null ? ImmutableList.of() : loadedPrograms,
+                                    loadedPrograms == null
+                                            ? ImmutableList.of()
+                                            : loadedPrograms,
                                     removeEmptySeriesSchedule,
                                     isWindowTranslucent,
                                     showViewScheduleOptionInDialog,
@@ -525,6 +526,22 @@ public class DvrUiHelper {
         }
     }
 
+    /**
+     * Shows the episode recording settings activity.
+     *
+     * @param program Program to be recorded
+     */
+    public static void startRecordingSettingsActivity(
+            Context context,
+            Program program) {
+        if (program != null) {
+            Intent intent = new Intent(context, DvrRecordingSettingsActivity.class);
+            intent.putExtra(DvrRecordingSettingsActivity.IS_WINDOW_TRANSLUCENT, true);
+            intent.putExtra(DvrRecordingSettingsActivity.PROGRAM, program.toParcelable());
+            context.startActivity(intent);
+        }
+    }
+
     private static void startSeriesSettingsActivityInternal(
             Context context,
             long seriesRecordingId,
@@ -546,8 +563,7 @@ public class DvrUiHelper {
                 DvrSeriesSettingsActivity.SHOW_VIEW_SCHEDULE_OPTION_IN_DIALOG,
                 showViewScheduleOptionInDialog);
         if (currentProgram != null) {
-            intent.putExtra(
-                    DvrSeriesSettingsActivity.CURRENT_PROGRAM, currentProgram.toParcelable());
+            intent.putExtra(DvrSeriesSettingsActivity.CURRENT_PROGRAM, currentProgram.toParcelable());
         }
         context.startActivity(intent);
     }

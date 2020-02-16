@@ -83,6 +83,8 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 import com.google.common.collect.ImmutableList;
 
+import com.android.tv.common.flags.LegacyFlags;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Iterator;

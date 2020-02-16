@@ -74,7 +74,7 @@ public final class TvFeatures extends CommonFeatures {
             or(
                     FlagFeature.from(
                             context -> HasSingletons.get(HasUiFlags.class, context),
-                            input -> input.getUiFlags().uhideLauncher()),
+                            input -> input.getUiFlags().unhideLauncher()),
                     // If LC app runs as non-system app, we unhide the app.
                     not(PermissionUtils::hasAccessAllEpg));
 

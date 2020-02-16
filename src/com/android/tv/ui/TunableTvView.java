@@ -66,7 +66,6 @@ import com.android.tv.common.CommonConstants;
 import com.android.tv.common.compat.TvInputConstantCompat;
 import com.android.tv.common.compat.TvViewCompat.TvInputCallbackCompat;
 import com.android.tv.common.feature.CommonFeatures;
-import com.android.tv.common.flags.LegacyFlags;
 import com.android.tv.common.util.CommonUtils;
 import com.android.tv.common.util.Debug;
 import com.android.tv.common.util.DurationTimer;
@@ -85,6 +84,8 @@ import com.android.tv.util.NetworkUtils;
 import com.android.tv.util.TvInputManagerHelper;
 import com.android.tv.util.Utils;
 import com.android.tv.util.images.ImageLoader;
+
+import com.android.tv.common.flags.LegacyFlags;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
@@ -135,8 +136,7 @@ public class TunableTvView extends FrameLayout implements StreamInfo, TunableTvV
 
     private AppLayerTvView mTvView;
     private TvViewSession mTvViewSession;
-    @Nullable
-    private Channel mCurrentChannel;
+    @Nullable private Channel mCurrentChannel;
     private TvInputManagerHelper mInputManagerHelper;
     private ContentRatingsManager mContentRatingsManager;
     private ParentalControlSettings mParentalControlSettings;

@@ -31,6 +31,10 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
+    lintOptions {
+        abortOnError false
+    }
+
     defaultConfig {
         minSdkVersion 28
         resConfigs "en"
@@ -67,13 +71,6 @@ android {
             }
         }
     }
-
-    lintOptions {
-        checkReleaseBuilds false
-        // Or, if you prefer, you can continue to check for errors in release builds,
-        // but continue the build even when errors are found:
-        abortOnError false
-    }
 }
 
 dependencies {
@@ -94,34 +91,22 @@ dependencies {
     implementation 'com.google.dagger:dagger-android:2.23'
     annotationProcessor 'com.google.dagger:dagger-android-processor:2.23'
     annotationProcessor 'com.google.dagger:dagger-compiler:2.23'
-    implementation 'com.google.guava:guava:28.0-jre'
-    implementation 'com.google.protobuf:protobuf-java:3.0.0'
+    implementation      'com.google.guava:guava:28.1-jre'
+    implementation      'com.google.protobuf:protobuf-javalite:3.11.0'
 }
 protobuf {
-    // Configure the protoc executable
     protoc {
-        artifact = 'com.google.protobuf:protoc:3.0.0'
-
-        plugins {
-            javalite {
-                // The codegen for lite comes as a separate artifact
-                artifact = 'com.google.protobuf:protoc-gen-javalite:3.0.0'
-            }
-        }
-
-        generateProtoTasks {
-            all().each {
-                task ->
-                    task.builtins {
-                        remove java
-                    }
-                    task.plugins {
-                        javalite {}
-                    }
+        artifact = 'com.google.protobuf:protoc:3.11.0'
+    }
+    generateProtoTasks {
+        all().each { task ->
+            task.builtins {
+                java {
+                    option "lite"
+                }
             }
         }
     }
-
 }
 //preBuild {
 //    doLast {

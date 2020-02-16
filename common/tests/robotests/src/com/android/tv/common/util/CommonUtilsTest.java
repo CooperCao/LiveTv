@@ -18,13 +18,15 @@ package com.android.tv.common.util;
 import static com.google.common.truth.Truth.assertThat;
 
 import com.android.tv.testing.constants.ConfigConstants;
-import org.robolectric.RobolectricTestRunner;
-import java.io.File;
-import java.io.IOException;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
+
+import java.io.File;
+import java.io.IOException;
 
 /** Tests for {@link CommonUtils}. */
 @RunWith(RobolectricTestRunner.class)

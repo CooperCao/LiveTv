@@ -76,6 +76,4 @@ public abstract class TisSessionCompat extends Session
     public void notifySignalStrength(int value) {
         mTifCompatProcessor.notifySignalStrength(value);
     }
-
-
 }

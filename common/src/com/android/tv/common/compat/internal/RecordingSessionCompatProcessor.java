@@ -16,11 +16,11 @@
 package com.android.tv.common.compat.internal;
 
 import android.util.Log;
-
 import com.android.tv.common.compat.api.RecordingSessionCompatCommands;
 import com.android.tv.common.compat.api.RecordingSessionCompatEvents;
 import com.android.tv.common.compat.api.SessionEventNotifier;
 import com.android.tv.common.compat.internal.RecordingCommands.PrivateRecordingCommand;
+import com.android.tv.common.compat.internal.RecordingEvents.NotifyDevRecordingToast;
 import com.android.tv.common.compat.internal.RecordingEvents.RecordingSessionEvent;
 import com.android.tv.common.compat.internal.RecordingEvents.RecordingStarted;
 
@@ -57,8 +57,7 @@ public final class RecordingSessionCompatProcessor
 
     @Override
     public void notifyDevToast(String message) {
-        RecordingEvents.NotifyDevRecordingToast devMessage =
-                RecordingEvents.NotifyDevRecordingToast.newBuilder().setMessage(message).build();
+        NotifyDevRecordingToast devMessage = NotifyDevRecordingToast.newBuilder().setMessage(message).build();
         RecordingSessionEvent sessionEvent =
                 createSessionEvent().setNotifyDevMessage(devMessage).build();
         notifyCompat(sessionEvent);

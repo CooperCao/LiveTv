@@ -34,9 +34,11 @@ import com.android.tv.tuner.data.Cea708Data.CaptionEvent;
 import com.android.tv.tuner.data.Track.AtscCaptionTrack;
 import com.android.tv.tuner.util.GlobalSettingsUtils;
 import com.android.tv.tuner.util.StatusTextUtils;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 
 /** Executes {@link Session} overlay changes on the main thread. */
-/* package */ final class TunerSessionOverlay implements Handler.Callback {
+public final class TunerSessionOverlay implements Handler.Callback {
     private static final boolean DEBUG = false;
 
     /** Displays the given {@link String} message object in the message view. */
@@ -78,11 +80,24 @@ import com.android.tv.tuner.util.StatusTextUtils;
     private final CaptionTrackRenderer mCaptionTrackRenderer;
 
     /**
+     * Factory for {@link TunerSessionOverlay}.
+     *
+     * <p>This wrapper class keeps other classes from needing to reference the {@link AutoFactory}
+     * generated class.
+     */
+    public interface Factory {
+        public TunerSessionOverlay create(Context context);
+    }
+
+    /**
      * Creates and inflates a {@link Session} overlay from the given context.
      *
      * @param context The {@link Context} of the {@link Session}.
      */
-    public TunerSessionOverlay(Context context) {
+    @AutoFactory(implementing = Factory.class)
+    public TunerSessionOverlay(
+            Context context,
+            @Provided CaptionTrackRenderer.Factory captionTrackRendererFactory) {
         mContext = context;
         mHandler = new Handler(this);
         LayoutInflater inflater =
@@ -96,7 +111,7 @@ import com.android.tv.tuner.util.StatusTextUtils;
         mAudioStatusView = mOverlayView.findViewById(R.id.audio_status);
         mAudioStatusView.setVisibility(View.INVISIBLE);
         CaptionLayout captionLayout = mOverlayView.findViewById(R.id.caption);
-        mCaptionTrackRenderer = new CaptionTrackRenderer(captionLayout);
+        mCaptionTrackRenderer = captionTrackRendererFactory.create(captionLayout);
     }
 
     /** Clears any pending messages in the message queue. */

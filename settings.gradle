@@ -20,8 +20,9 @@
  */
 
 include ':common'
-include ':tuner'
-include ':SampleDvbTuner'
-project(":SampleDvbTuner").projectDir = file("tuner/SampleDvbTuner")
-include ':SampleNetworkTuner'
-project(":SampleNetworkTuner").projectDir = file("tuner/SampleNetworkTuner")
+
+//include ':tuner'
+//include ':SampleDvbTuner'
+//project(":SampleDvbTuner").projectDir = file("tuner/SampleDvbTuner")
+//include ':SampleNetworkTuner'
+//project(":SampleNetworkTuner").projectDir = file("tuner/SampleNetworkTuner")

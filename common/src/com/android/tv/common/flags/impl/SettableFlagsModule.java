@@ -23,6 +23,7 @@ import com.android.tv.common.flags.BackendKnobsFlags;
 import com.android.tv.common.flags.CloudEpgFlags;
 import com.android.tv.common.flags.DvrFlags;
 import com.android.tv.common.flags.LegacyFlags;
+import com.android.tv.common.flags.SetupFlags;
 import com.android.tv.common.flags.StartupFlags;
 import com.android.tv.common.flags.TunerFlags;
 import com.android.tv.common.flags.UiFlags;
@@ -35,6 +36,7 @@ public class SettableFlagsModule {
     public DefaultCloudEpgFlags cloudEpgFlags = new DefaultCloudEpgFlags();
     public DefaultDvrFlags dvrFlags = new DefaultDvrFlags();
     public DefaultLegacyFlags legacyFlags = DefaultLegacyFlags.DEFAULT;
+    public DefaultSetupFlags setupFlags = new DefaultSetupFlags();
     public DefaultStartupFlags startupFlags = new DefaultStartupFlags();
     public DefaultTunerFlags tunerFlags = new DefaultTunerFlags();
     public DefaultUiFlags uiFlags = new DefaultUiFlags();
@@ -61,6 +63,12 @@ public class SettableFlagsModule {
     @Reusable
     LegacyFlags provideLegacyFlags() {
         return legacyFlags;
+    }
+
+    @Provides
+    @Reusable
+    SetupFlags provideSetupFlags() {
+        return setupFlags;
     }
 
     @Provides

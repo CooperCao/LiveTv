@@ -24,6 +24,7 @@ import com.android.tv.common.compat.api.RecordingClientCallbackCompatEvents;
 import com.android.tv.common.compat.api.TvViewCompatCommands;
 import com.android.tv.common.compat.internal.Commands.OnDevMessage;
 import com.android.tv.common.compat.internal.Commands.PrivateCommand;
+import com.android.tv.common.compat.internal.RecordingEvents.NotifyDevRecordingToast;
 import com.android.tv.common.compat.internal.RecordingEvents.RecordingSessionEvent;
 
 /**

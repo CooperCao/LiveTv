@@ -41,7 +41,7 @@ import com.google.auto.factory.AutoFactory;
 import com.google.auto.factory.Provided;
 
 /** Provides a tuner TV input session. */
-@AutoFactory(implementing = TunerSessionFactory.class)
+@AutoFactory(className = "TunerSessionExoV2Factory", implementing = TunerSessionFactory.class)
 public class TunerSessionExoV2 extends TisSessionCompat
         implements CommonPreferencesChangedListener {
 
@@ -60,11 +60,12 @@ public class TunerSessionExoV2 extends TisSessionCompat
             ChannelDataManager channelDataManager,
             SessionReleasedCallback releasedCallback,
             SessionRecordingCallback recordingCallback,
-            @Provided TunerSessionWorkerExoV2.Factory tunerSessionWorkerExoV2Factory) {
+            @Provided TunerSessionWorkerExoV2.Factory tunerSessionWorkerExoV2Factory,
+            @Provided TunerSessionOverlay.Factory tunerSessionOverlay) {
         super(context);
         mReleasedCallback = releasedCallback;
         mRecordingCallback = recordingCallback;
-        mTunerSessionOverlay = new TunerSessionOverlay(context);
+        mTunerSessionOverlay = tunerSessionOverlay.create(context);
         mSessionWorker =
                 tunerSessionWorkerExoV2Factory.create(
                         context,
@@ -213,7 +214,4 @@ public class TunerSessionExoV2 extends TisSessionCompat
     public Uri getRecordingUri(Uri channelUri) {
         return mRecordingCallback.getRecordingUri(channelUri);
     }
-
-
-
 }

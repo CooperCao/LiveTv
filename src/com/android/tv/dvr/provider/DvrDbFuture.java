@@ -21,12 +21,15 @@ import androidx.annotation.Nullable;
 import android.util.Log;
 
 import com.android.tv.common.concurrent.NamedThreadFactory;
+import com.android.tv.common.flags.DvrFlags;
 import com.android.tv.dvr.data.ScheduledRecording;
 import com.android.tv.dvr.data.SeriesRecording;
 import com.android.tv.dvr.provider.DvrContract.Schedules;
 import com.android.tv.dvr.provider.DvrContract.SeriesRecordings;
 import com.android.tv.util.MainThreadExecutor;
 
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 import com.google.common.util.concurrent.FutureCallback;
 import com.google.common.util.concurrent.Futures;
 import com.google.common.util.concurrent.ListenableFuture;
@@ -109,8 +112,23 @@ public abstract class DvrDbFuture<ParamsT, ResultT> {
 
     /** Returns all {@link ScheduledRecording}s. */
     public static class DvrQueryScheduleFuture extends DvrDbFuture<Void, List<ScheduledRecording>> {
-        public DvrQueryScheduleFuture(DvrDatabaseHelper dbHelper) {
+
+        private final DvrFlags mDvrFlags;
+
+        /**
+         * Factory for {@link DvrQueryScheduleFuture}.
+         *
+         * <p>This wrapper class keeps other classes from needing to reference the
+         * {@link AutoFactory} generated class.
+         */
+        public interface Factory {
+            public DvrQueryScheduleFuture create(DvrDatabaseHelper dbHelper);
+        }
+
+        @AutoFactory(implementing = Factory.class, className = "DvrQueryScheduleFutureFactory")
+        public DvrQueryScheduleFuture(DvrDatabaseHelper dbHelper, @Provided DvrFlags dvrFlags) {
             super(dbHelper);
+            mDvrFlags = dvrFlags;
         }
 
         @Override
@@ -120,9 +138,19 @@ public abstract class DvrDbFuture<ParamsT, ResultT> {
                 return null;
             }
             List<ScheduledRecording> scheduledRecordings = new ArrayList<>();
-            try (Cursor c = mDbHelper.query(Schedules.TABLE_NAME, ScheduledRecording.PROJECTION)) {
-                while (c.moveToNext() && !isCancelled()) {
-                    scheduledRecordings.add(ScheduledRecording.fromCursor(c));
+            if (mDvrFlags.startEarlyEndLateEnabled()) {
+                try (Cursor c = mDbHelper.query(Schedules.TABLE_NAME,
+                        ScheduledRecording.PROJECTION_WITH_TIME_OFFSET)) {
+                    while (c.moveToNext() && !isCancelled()) {
+                        scheduledRecordings.add(ScheduledRecording.fromCursorWithTimeOffset(c));
+                    }
+                }
+            } else {
+                try (Cursor c = mDbHelper.query(Schedules.TABLE_NAME,
+                        ScheduledRecording.PROJECTION)) {
+                    while (c.moveToNext() && !isCancelled()) {
+                        scheduledRecordings.add(ScheduledRecording.fromCursor(c));
+                    }
                 }
             }
             return scheduledRecordings;

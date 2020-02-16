@@ -23,6 +23,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.media.tv.TvInputInfo;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import com.android.tv.R;
@@ -39,16 +40,20 @@ import com.android.tv.util.TvInputManagerHelper;
 import dagger.android.AndroidInjection;
 import dagger.android.ContributesAndroidInjector;
 
+import com.android.tv.common.flags.UiFlags;
+
 import javax.inject.Inject;
 
 /** A activity to start input sources setup fragment for initial setup flow. */
 public class SystemSetupActivity extends SetupActivity {
+    private static final String TAG = "SystemSetupActivity";
     private static final String SYSTEM_SETUP =
             CommonConstants.BASE_PACKAGE + ".action.LAUNCH_SYSTEM_SETUP";
     private static final int SHOW_RIPPLE_DURATION_MS = 266;
     private static final int REQUEST_CODE_START_SETUP_ACTIVITY = 1;
 
     @Inject TvInputManagerHelper mInputManager;
+    @Inject UiFlags mUiFlags;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +72,15 @@ public class SystemSetupActivity extends SetupActivity {
     }
 
     private void showMerchantCollection() {
-        executeActionWithDelay(
-                () -> startActivity(OnboardingUtils.ONLINE_STORE_INTENT), SHOW_RIPPLE_DURATION_MS);
+        Intent onlineStoreIntent = OnboardingUtils.createOnlineStoreIntent(mUiFlags);
+        if (onlineStoreIntent != null) {
+            executeActionWithDelay(() -> startActivity(onlineStoreIntent), SHOW_RIPPLE_DURATION_MS);
+        } else {
+            Log.w(
+                    TAG,
+                    "Unable to show merchant collection, more channels url is not valid. url is "
+                            + mUiFlags.moreChannelsUrl());
+        }
     }
 
     @Override

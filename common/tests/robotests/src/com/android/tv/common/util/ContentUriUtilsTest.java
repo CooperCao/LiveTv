@@ -18,10 +18,12 @@ package com.android.tv.common.util;
 import static com.google.common.truth.Truth.assertThat;
 
 import android.net.Uri;
+
 import com.android.tv.testing.constants.ConfigConstants;
-import org.robolectric.RobolectricTestRunner;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.robolectric.RobolectricTestRunner;
 import org.robolectric.annotation.Config;
 
 /** Tests for {@link ContentUriUtils}. */

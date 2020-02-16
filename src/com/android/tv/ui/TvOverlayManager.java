@@ -65,6 +65,7 @@ import com.android.tv.menu.Menu;
 import com.android.tv.menu.Menu.MenuShowReason;
 import com.android.tv.menu.MenuRowFactory;
 import com.android.tv.menu.MenuView;
+import com.android.tv.menu.TvOptionsRowAdapter;
 import com.android.tv.onboarding.NewSourcesFragment;
 import com.android.tv.onboarding.SetupSourcesFragment;
 import com.android.tv.search.ProgramGuideSearchFragment;
@@ -225,7 +226,7 @@ public class TvOverlayManager implements AccessibilityStateChangeListener {
 
     private final List<Runnable> mPendingActions = new ArrayList<>();
     private final Queue<PendingDialogAction> mPendingDialogActionQueue = new LinkedList<>();
-    private final LegacyFlags mLegacyFlags;
+    private final TvOptionsRowAdapter.Factory mTvOptionsRowAdapterFactory;
 
     private OnBackStackChangedListener mOnBackStackChangedListener;
 
@@ -240,14 +241,14 @@ public class TvOverlayManager implements AccessibilityStateChangeListener {
             SelectInputView selectInputView,
             ViewGroup sceneContainer,
             ProgramGuideSearchFragment searchFragment,
-            @Provided LegacyFlags legacyFlags,
             @Provided ChannelDataManager channelDataManager,
             @Provided TvInputManagerHelper tvInputManager,
-            @Provided ProgramDataManager programDataManager) {
+            @Provided ProgramDataManager programDataManager,
+            @Provided TvOptionsRowAdapter.Factory mTvOptionsRowAdapterFactory) {
         mMainActivity = mainActivity;
         mChannelTuner = channelTuner;
+        this.mTvOptionsRowAdapterFactory = mTvOptionsRowAdapterFactory;
         TvSingletons singletons = TvSingletons.getSingletons(mainActivity);
-        mLegacyFlags = legacyFlags;
         mChannelDataManager = channelDataManager;
         mInputManager = tvInputManager;
         mTvView = tvView;
@@ -286,7 +287,7 @@ public class TvOverlayManager implements AccessibilityStateChangeListener {
                         tvView,
                         optionsManager,
                         menuView,
-                        new MenuRowFactory(mainActivity, tvView, this.mLegacyFlags),
+                        new MenuRowFactory(mainActivity, tvView, this.mTvOptionsRowAdapterFactory),
                         new Menu.OnMenuVisibilityChangeListener() {
                             @Override
                             public void onMenuVisibilityChange(boolean visible) {

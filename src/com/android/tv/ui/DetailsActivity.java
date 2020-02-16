@@ -218,5 +218,8 @@ public class DetailsActivity extends DaggerActivity
         @ContributesAndroidInjector
         abstract CurrentRecordingDetailsFragment
                 contributesCurrentRecordingDetailsFragmentInjector();
+
+        @ContributesAndroidInjector
+        abstract ProgramDetailsFragment contributesProgramDetailsFragmentInjector();
     }
 }

@@ -39,6 +39,7 @@ import androidx.leanback.widget.VerticalGridView;
 import com.android.tv.R;
 import com.android.tv.TvSingletons;
 import com.android.tv.common.feature.CommonFeatures;
+import com.android.tv.common.flags.DvrFlags;
 import com.android.tv.data.ProgramImpl;
 import com.android.tv.data.api.Channel;
 import com.android.tv.dvr.DvrDataManager;
@@ -51,6 +52,9 @@ import com.android.tv.dvr.ui.browse.DetailsContent;
 import com.android.tv.dvr.ui.browse.DetailsContentPresenter;
 import com.android.tv.dvr.ui.browse.DetailsViewBackgroundHelper;
 import com.android.tv.util.images.ImageLoader;
+
+import javax.inject.Inject;
+import dagger.android.AndroidInjection;
 
 /** A fragment shows the details of a Program */
 public class ProgramDetailsFragment extends DetailsFragment
@@ -72,6 +76,7 @@ public class ProgramDetailsFragment extends DetailsFragment
     private DvrManager mDvrManager;
     private DvrDataManager mDvrDataManager;
     private DvrScheduleManager mDvrScheduleManager;
+    @Inject DvrFlags mDvrFlags;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -79,6 +84,12 @@ public class ProgramDetailsFragment extends DetailsFragment
         if (!onLoadDetails(getArguments())) {
             getActivity().finish();
         }
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        AndroidInjection.inject(this);
+        super.onAttach(context);
     }
 
     @Override
@@ -216,12 +227,16 @@ public class ProgramDetailsFragment extends DetailsFragment
                 } else if (actionId == ACTION_CANCEL) {
                     mDvrManager.removeScheduledRecording(mScheduledRecording);
                 } else if (actionId == ACTION_SCHEDULE_RECORDING) {
-                    DvrUiHelper.checkStorageStatusAndShowErrorMessage(
-                            getActivity(),
-                            mInputId,
-                            () ->
-                                    DvrUiHelper.requestRecordingFutureProgram(
-                                            getActivity(), mProgram, false));
+                    if (!mProgram.isEpisodic() && mDvrFlags.startEarlyEndLateEnabled()) {
+                        DvrUiHelper.startRecordingSettingsActivity(getContext(), mProgram);
+                    } else {
+                        DvrUiHelper.checkStorageStatusAndShowErrorMessage(
+                                getActivity(),
+                                mInputId,
+                                () ->
+                                        DvrUiHelper.requestRecordingFutureProgram(
+                                                getActivity(), mProgram, false));
+                    }
                 }
             }
         };

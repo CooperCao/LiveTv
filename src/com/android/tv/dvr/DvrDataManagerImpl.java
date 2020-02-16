@@ -109,6 +109,8 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
 
     private final Context mContext;
     private final DvrDatabaseHelper mDbHelper;
+    private final DvrDbSync.Factory mDvrDbSyncFactory;
+    private final DvrQueryScheduleFuture.Factory mDvrQueryScheduleFutureFactory;
     private Executor mDbExecutor;
     private final ContentObserver mContentObserver =
             new ContentObserver(new Handler(Looper.getMainLooper())) {
@@ -204,7 +206,9 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
             Clock clock,
             TvInputManagerHelper tvInputManagerHelper,
             @DbExecutor Executor dbExecutor,
-            DvrDatabaseHelper dbHelper) {
+            DvrDatabaseHelper dbHelper,
+            DvrDbSync.Factory dvrDbSyncFactory,
+            DvrQueryScheduleFuture.Factory dvrQueryScheduleFutureFactory) {
         super(context, clock);
         mContext = context;
         TvSingletons tvSingletons = TvSingletons.getSingletons(context);
@@ -212,6 +216,8 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
         mStorageStatusManager = tvSingletons.getRecordingStorageStatusManager();
         mDbExecutor = dbExecutor;
         mDbHelper = dbHelper;
+        mDvrQueryScheduleFutureFactory = dvrQueryScheduleFutureFactory;
+        mDvrDbSyncFactory = dvrDbSyncFactory;
         start();
     }
 
@@ -257,7 +263,8 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
                             }
                         });
         mPendingDvrFuture.add(dvrQuerySeriesRecordingFuture);
-        DvrQueryScheduleFuture dvrQueryScheduleTask = new DvrQueryScheduleFuture(mDbHelper);
+        DvrQueryScheduleFuture dvrQueryScheduleTask =
+                mDvrQueryScheduleFutureFactory.create(mDbHelper);
         ListenableFuture<List<ScheduledRecording>> dvrQueryScheduleFuture =
                 dvrQueryScheduleTask.executeOnDbThread(
                         new FutureCallback<List<ScheduledRecording>>() {
@@ -342,7 +349,9 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
                                 mDvrLoadFinished = true;
                                 notifyDvrScheduleLoadFinished();
                                 if (isInitialized()) {
-                                    mDbSync = new DvrDbSync(mContext, DvrDataManagerImpl.this);
+                                    mDbSync = mDvrDbSyncFactory.create(
+                                                    mContext,
+                                                    DvrDataManagerImpl.this);
                                     mDbSync.start();
                                     SeriesRecordingScheduler.getInstance(mContext).start();
                                 }
@@ -404,7 +413,7 @@ public class DvrDataManagerImpl extends BaseDvrDataManager {
                 mRecordedProgramLoadFinished = true;
                 notifyRecordedProgramLoadFinished();
                 if (isInitialized()) {
-                    mDbSync = new DvrDbSync(mContext, DvrDataManagerImpl.this);
+                    mDbSync = mDvrDbSyncFactory.create(mContext, DvrDataManagerImpl.this);
                     mDbSync.start();
                 }
             } else if (recordedPrograms.isEmpty()) {

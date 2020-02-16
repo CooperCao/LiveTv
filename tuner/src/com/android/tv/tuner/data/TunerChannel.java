@@ -165,6 +165,18 @@ public class TunerChannel implements Comparable<TunerChannel>, PsipData.TvTracks
                         .build();
     }
 
+    // b/141952456 may cause hasAudioTrackIndex and hasVideo to return false
+    private void initChannelInfoIfNeeded() {
+        if (!mProto.hasAudioTrackIndex()) {
+            // Force select audio track 0
+            selectAudioTrack(0);
+        }
+        if (!mProto.hasVideoPid() && mProto.getVideoPid() != INVALID_PID) {
+            // Force set Video PID
+            setVideoPid(mProto.getVideoPid());
+        }
+    }
+
     private TunerChannel(
             int programNumber,
             Channel.TunerType type,
@@ -208,6 +220,7 @@ public class TunerChannel implements Comparable<TunerChannel>, PsipData.TvTracks
 
     private TunerChannel(TunerChannelProto tunerChannelProto) {
         mProto = tunerChannelProto;
+        initChannelInfoIfNeeded();
     }
 
     public static TunerChannel forFile(PsipData.VctItem channel, List<PsiData.PmtItem> pmtItems) {

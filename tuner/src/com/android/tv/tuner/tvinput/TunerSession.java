@@ -62,11 +62,12 @@ public class TunerSession extends TisSessionCompat implements CommonPreferencesC
             ChannelDataManager channelDataManager,
             SessionReleasedCallback releasedCallback,
             SessionRecordingCallback recordingCallback,
-            @Provided TunerSessionWorker.Factory tunerSessionWorkerFactory) {
+            @Provided TunerSessionWorker.Factory tunerSessionWorkerFactory,
+            @Provided TunerSessionOverlay.Factory tunerSessionOverlayFactory) {
         super(context);
         mReleasedCallback = releasedCallback;
         mRecordingCallback = recordingCallback;
-        mTunerSessionOverlay = new TunerSessionOverlay(context);
+        mTunerSessionOverlay = tunerSessionOverlayFactory.create(context);
         mSessionWorker =
                 tunerSessionWorkerFactory.create(
                         context,

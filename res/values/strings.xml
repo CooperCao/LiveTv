@@ -717,6 +717,29 @@
     <!-- Button label in priority settings fragment for one-time recordings -->
     <string name="dvr_priority_action_one_time_recording">One-time recordings have the highest priority</string>
 
+    <!-- Title of DVR recording settings -->
+    <string name="dvr_recording_settings_title" translatable="false">Recording settings</string>
+    <!-- Title of recording start early settings fragment -->
+    <string name="dvr_start_early_title" translatable="false">Start early</string>
+    <!-- Title of recording end late settings fragment -->
+    <string name="dvr_end_late_title" translatable="false">End Late</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_none" translatable="false">On time</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_one_min" translatable="false">One Minute</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_five_mins" translatable="false">5 Minutes</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_fifteen_mins" translatable="false">15 Minutes</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_half_hour" translatable="false">30 Minutes</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_one_hour" translatable="false">60 Minutes</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_two_hours" translatable="false">120 Minutes</string>
+    <!-- Item description of time when the program has to be started early or ended late. -->
+    <string name="dvr_recording_settings_time_three_hours" translatable="false">180 Minutes</string>
+
     <!-- DVR epg strings -->
     <eat-comment />
     <!--  Button text that deletes scheduled future recordings of a TV Program or Series. [CHAR LIMIT=50] -->

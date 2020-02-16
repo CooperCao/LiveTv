@@ -163,6 +163,18 @@ public class DvrManager {
 
     /** Schedules a recording for {@code program}. */
     public ScheduledRecording addSchedule(Program program) {
+        return addSchedule(program, 0, 0);
+    }
+
+    /**
+     * Schedules a recording for {@code program} with a early start time and late end time.
+     *
+     *@param startOffsetMs The extra time in milliseconds to start recording before the program
+     *                     starts.
+     *@param endOffsetMs The extra time in milliseconds to end recording after the program ends.
+     */
+    public ScheduledRecording addSchedule(Program program,
+                                          long startOffsetMs, long endOffsetMs) {
         if (!SoftPreconditions.checkState(mDataManager.isDvrScheduleLoadFinished())) {
             return null;
         }
@@ -171,7 +183,9 @@ public class DvrManager {
                 program,
                 seriesRecording == null
                         ? mScheduleManager.suggestNewPriority()
-                        : seriesRecording.getPriority());
+                        : seriesRecording.getPriority(),
+                startOffsetMs,
+                endOffsetMs);
     }
 
     /**
@@ -192,10 +206,13 @@ public class DvrManager {
                                 Range.create(
                                         program.getStartTimeUtcMillis(),
                                         program.getEndTimeUtcMillis()),
-                                seriesRecording.getPriority()));
+                                seriesRecording.getPriority()),
+                0,
+                0);
     }
 
-    private ScheduledRecording addSchedule(Program program, long priority) {
+    private ScheduledRecording addSchedule(Program program, long priority,
+                                           long startOffsetMs, long endOffsetMs) {
         TvInputInfo input = Utils.getTvInputInfoForProgram(mAppContext, program);
         if (input == null) {
             Log.e(TAG, "Can't find input for program: " + program);
@@ -210,6 +227,8 @@ public class DvrManager {
                                 seriesRecording == null
                                         ? SeriesRecording.ID_NOT_SET
                                         : seriesRecording.getId())
+                        .setStartOffsetMs(startOffsetMs)
+                        .setEndOffsetMs(endOffsetMs)
                         .build();
         mDataManager.addScheduledRecording(schedule);
         return schedule;

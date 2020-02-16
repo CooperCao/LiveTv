@@ -15,6 +15,10 @@
  */
 package com.android.tv.tuner.modules;
 
+import com.android.tv.tuner.cc.CaptionTrackRenderer;
+import com.android.tv.tuner.cc.CaptionTrackRendererFactory;
+import com.android.tv.tuner.cc.CaptionWindowLayout;
+import com.android.tv.tuner.cc.CaptionWindowLayoutFactory;
 import com.android.tv.tuner.exoplayer.ExoPlayerSampleExtractor;
 import com.android.tv.tuner.exoplayer.ExoPlayerSampleExtractorFactory;
 import com.android.tv.tuner.exoplayer.FileSampleExtractor;
@@ -32,6 +36,8 @@ import com.android.tv.tuner.tvinput.TunerRecordingSessionFactoryImpl;
 import com.android.tv.tuner.tvinput.TunerRecordingSessionWorker;
 import com.android.tv.tuner.tvinput.TunerRecordingSessionWorkerFactory;
 import com.android.tv.tuner.tvinput.TunerSessionExoV2Factory;
+import com.android.tv.tuner.tvinput.TunerSessionOverlay;
+import com.android.tv.tuner.tvinput.TunerSessionOverlayFactory;
 import com.android.tv.tuner.tvinput.TunerSessionV1Factory;
 import com.android.tv.tuner.tvinput.TunerSessionWorker;
 import com.android.tv.tuner.tvinput.TunerSessionWorkerExoV2;
@@ -65,6 +71,18 @@ public abstract class TunerModule {
     @Binds
     abstract TunerSessionWorker.Factory tunerSessionWorkerFactory(
             TunerSessionWorkerFactory tunerSessionWorkerFactory);
+
+    @Binds
+    abstract TunerSessionOverlay.Factory tunerSessionOverlayFactory(
+            TunerSessionOverlayFactory tunerSessionOverlayFactory);
+
+    @Binds
+    abstract CaptionTrackRenderer.Factory captionTrackRendererFactory(
+            CaptionTrackRendererFactory captionTrackRendererFactory);
+
+    @Binds
+    abstract CaptionWindowLayout.Factory captionWindowLayoutFactory(
+            CaptionWindowLayoutFactory captionWindowLayoutFactory);
 
     @Binds
     abstract TunerSessionWorkerExoV2.Factory tunerSessionWorkerExoV2Factory(

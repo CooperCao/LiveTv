@@ -20,5 +20,5 @@ import android.os.Bundle;
 /** Sends events from a {@link android.media.tv.TvInputService.Session} to the TV App. */
 public interface SessionEventNotifier {
 
-    default void notifySessionEvent(String event, Bundle data){}
+    void notifySessionEvent(String event, Bundle data);
 }

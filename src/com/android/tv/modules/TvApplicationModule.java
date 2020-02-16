@@ -32,8 +32,17 @@ import com.android.tv.data.epg.EpgFetcherImpl;
 import com.android.tv.dialog.PinDialogFragment;
 import com.android.tv.dvr.DvrDataManager;
 import com.android.tv.dvr.DvrDataManagerImpl;
+import com.android.tv.dvr.DvrManager;
 import com.android.tv.dvr.WritableDvrDataManager;
+import com.android.tv.dvr.provider.DvrDbFuture.DvrQueryScheduleFuture;
+import com.android.tv.dvr.provider.DvrDbSync;
+import com.android.tv.dvr.provider.DvrDbSyncFactory;
+import com.android.tv.dvr.provider.DvrQueryScheduleFutureFactory;
 import com.android.tv.dvr.ui.playback.DvrPlaybackActivity;
+import com.android.tv.menu.MenuRowFactory;
+import com.android.tv.menu.MenuRowFactoryFactory;
+import com.android.tv.menu.TvOptionsRowAdapter;
+import com.android.tv.menu.TvOptionsRowAdapterFactory;
 import com.android.tv.onboarding.OnboardingActivity;
 import com.android.tv.onboarding.SetupSourcesFragment;
 import com.android.tv.setup.SystemSetupActivity;
@@ -96,6 +105,12 @@ public abstract class TvApplicationModule {
         return channelDataManager;
     }
 
+    @Provides
+    @Singleton
+    static DvrManager providesDvrManager(@ApplicationContext Context context) {
+        return new DvrManager(context);
+    }
+
     @Binds
     @Singleton
     abstract DvrDataManager providesDvrDataManager(DvrDataManagerImpl impl);
@@ -107,6 +122,20 @@ public abstract class TvApplicationModule {
     @Binds
     @Singleton
     abstract EpgFetcher epgFetcher(EpgFetcherImpl impl);
+
+    @Binds
+    abstract DvrDbSync.Factory dvrDbSyncFactory(DvrDbSyncFactory dvrDbSyncFactory);
+
+    @Binds
+    abstract DvrQueryScheduleFuture.Factory dvrQueryScheduleFutureFactory(
+            DvrQueryScheduleFutureFactory dvrQueryScheduleFutureFactory);
+
+    @Binds
+    abstract TvOptionsRowAdapter.Factory tvOptionsRowAdapterFactory(
+            TvOptionsRowAdapterFactory impl);
+
+    @Binds
+    abstract MenuRowFactory.Factory menuRowFactoryFactory(MenuRowFactoryFactory impl);
 
     @ContributesAndroidInjector
     abstract PinDialogFragment contributesPinDialogFragment();

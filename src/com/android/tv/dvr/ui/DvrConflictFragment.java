@@ -92,6 +92,10 @@ public abstract class DvrConflictFragment extends DvrGuidedStepFragment {
                     getContext(), getConflicts());
         }
         dismissDialog();
+        // Finish the Recording setting Activity on dismissal.
+        if (getActivity() instanceof DvrRecordingSettingsActivity) {
+            getActivity().finish();
+        }
     }
 
     @Override

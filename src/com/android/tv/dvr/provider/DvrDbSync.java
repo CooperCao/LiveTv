@@ -30,7 +30,7 @@ import androidx.annotation.MainThread;
 import androidx.annotation.VisibleForTesting;
 import android.util.Log;
 
-import com.android.tv.TvSingletons;
+import com.android.tv.common.flags.DvrFlags;
 import com.android.tv.data.ChannelDataManager;
 import com.android.tv.data.api.Program;
 import com.android.tv.dvr.DvrDataManager.ScheduledRecordingListener;
@@ -40,7 +40,10 @@ import com.android.tv.dvr.data.ScheduledRecording;
 import com.android.tv.dvr.data.SeriesRecording;
 import com.android.tv.dvr.recorder.SeriesRecordingScheduler;
 import com.android.tv.util.AsyncDbTask.AsyncQueryProgramTask;
+import com.android.tv.util.AsyncDbTask.DbExecutor;
 import com.android.tv.util.TvUriMatcher;
+import com.google.auto.factory.AutoFactory;
+import com.google.auto.factory.Provided;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -76,6 +79,7 @@ public class DvrDbSync {
     private final ChannelDataManager mChannelDataManager;
     private final Executor mDbExecutor;
     private final Queue<Long> mProgramIdQueue = new LinkedList<>();
+    private final DvrFlags mDvrFlags;
     private QueryProgramTask mQueryProgramTask;
     private final SeriesRecordingScheduler mSeriesRecordingScheduler;
     private final ContentObserver mContentObserver =
@@ -143,26 +147,46 @@ public class DvrDbSync {
                 }
             };
 
-    public DvrDbSync(Context context, WritableDvrDataManager dataManager) {
+    /**
+     * Factory for {@link DvrDbSync}.
+     *
+     * <p>This wrapper class keeps other classes from needing to reference the {@link AutoFactory}
+     * generated class.
+     */
+    public interface Factory {
+        public DvrDbSync create(Context context, WritableDvrDataManager dataManager);
+    }
+
+    @AutoFactory(implementing = Factory.class)
+    public DvrDbSync(
+            Context context,
+            WritableDvrDataManager dataManager,
+            @Provided DvrFlags dvrFlags,
+            @Provided ChannelDataManager channelDataManager,
+            @Provided DvrManager dvrManager,
+            @Provided @DbExecutor Executor dbExecutor) {
         this(
                 context,
                 dataManager,
-                TvSingletons.getSingletons(context).getChannelDataManager(),
-                TvSingletons.getSingletons(context).getDvrManager(),
+                dvrFlags,
+                channelDataManager,
+                dvrManager,
                 SeriesRecordingScheduler.getInstance(context),
-                TvSingletons.getSingletons(context).getDbExecutor());
+                dbExecutor);
     }
 
     @VisibleForTesting
     DvrDbSync(
             Context context,
             WritableDvrDataManager dataManager,
+            DvrFlags dvrFlags,
             ChannelDataManager channelDataManager,
             DvrManager dvrManager,
             SeriesRecordingScheduler seriesRecordingScheduler,
             Executor dbExecutor) {
         mContext = context;
         mDvrManager = dvrManager;
+        mDvrFlags = dvrFlags;
         mDataManager = dataManager;
         mChannelDataManager = channelDataManager;
         mSeriesRecordingScheduler = seriesRecordingScheduler;
@@ -284,7 +308,6 @@ public class DvrDbSync {
             } else {
                 ScheduledRecording.Builder builder =
                         ScheduledRecording.buildFrom(schedule)
-                                .setEndTimeMs(program.getEndTimeUtcMillis())
                                 .setSeasonNumber(program.getSeasonNumber())
                                 .setEpisodeNumber(program.getEpisodeNumber())
                                 .setEpisodeTitle(program.getEpisodeTitle())
@@ -333,18 +356,30 @@ public class DvrDbSync {
                 // Change start time only when the recording is not started yet and if it is not
                 // within marginal time of current time. Marginal check is needed to prevent the
                 // update of start time if recording is just triggered or about to get triggered.
-                boolean marginalToCurrentTime = RECORD_MARGIN_MS >
-                        Math.abs(System.currentTimeMillis() - schedule.getStartTimeMs());
-                boolean needToChangeStartTime =
-                        schedule.getState() != ScheduledRecording.STATE_RECORDING_IN_PROGRESS
-                                && program.getStartTimeUtcMillis() != schedule.getStartTimeMs()
-                                && !marginalToCurrentTime;
-                if (needToChangeStartTime) {
-                    builder.setStartTimeMs(program.getStartTimeUtcMillis());
-                    needUpdate = true;
+                if (mDvrFlags.startEarlyEndLateEnabled()) {
+                    ScheduledRecording.Builder builderUpdatedTime =
+                            handleUpdateProgramTime(program, schedule, builder);
+                    if (builderUpdatedTime != null) {
+                        builder = builderUpdatedTime;
+                        needUpdate = true;
+                    }
+                } else {
+                    boolean marginalToCurrentTime = RECORD_MARGIN_MS >
+                            Math.abs(System.currentTimeMillis() - schedule.getStartTimeMs());
+                    boolean needToChangeStartTime =
+                            schedule.getState() != ScheduledRecording.STATE_RECORDING_IN_PROGRESS
+                                    && program.getStartTimeUtcMillis() != schedule.getStartTimeMs()
+                                    && !marginalToCurrentTime;
+                    if (needToChangeStartTime) {
+                        builder.setStartTimeMs(program.getStartTimeUtcMillis());
+                        needUpdate = true;
+                    }
+                    if (schedule.getEndTimeMs() != program.getEndTimeUtcMillis()) {
+                        builder.setEndTimeMs(program.getEndTimeUtcMillis());
+                        needUpdate = true;
+                    }
                 }
                 if (needUpdate
-                        || schedule.getEndTimeMs() != program.getEndTimeUtcMillis()
                         || !Objects.equals(schedule.getSeasonNumber(), program.getSeasonNumber())
                         || !Objects.equals(schedule.getEpisodeNumber(), program.getEpisodeNumber())
                         || !Objects.equals(schedule.getEpisodeTitle(), program.getEpisodeTitle())
@@ -364,6 +399,35 @@ public class DvrDbSync {
                 }
             }
         }
+    }
+
+    private static ScheduledRecording.Builder handleUpdateProgramTime(
+            Program program, ScheduledRecording schedule, ScheduledRecording.Builder builder) {
+        boolean needUpdate = false;
+        long currentTime = System.currentTimeMillis();
+        boolean marginalToCurrentTime = RECORD_MARGIN_MS >
+                Math.abs(currentTime - schedule.getStartTimeMs());
+        long updatedStartTime = program.getStartTimeUtcMillis() - schedule.getStartOffsetMs();
+        boolean needToChangeStartTime =
+                schedule.getState() != ScheduledRecording.STATE_RECORDING_IN_PROGRESS
+                        && schedule.getStartTimeMs() != updatedStartTime
+                        && !marginalToCurrentTime;
+        if (needToChangeStartTime) {
+            // Check if updated program time has already passed.
+            if (updatedStartTime < currentTime) {
+                updatedStartTime = currentTime + RECORD_MARGIN_MS;
+                long updatedStartOffset = program.getStartTimeUtcMillis() - updatedStartTime;
+                builder.setStartOffsetMs(updatedStartOffset > 0 ? updatedStartOffset : 0);
+            }
+            builder.setStartTimeMs(updatedStartTime);
+            needUpdate = true;
+        }
+        long updatedEndTime = program.getEndTimeUtcMillis() + schedule.getEndOffsetMs();
+        if (schedule.getEndTimeMs() != updatedEndTime) {
+            builder.setEndTimeMs(updatedEndTime);
+            needUpdate = true;
+        }
+        return (needUpdate ? builder : null);
     }
 
     private class QueryProgramTask extends AsyncQueryProgramTask {

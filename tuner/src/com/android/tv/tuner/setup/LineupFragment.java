@@ -25,11 +25,11 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.leanback.widget.GuidanceStylist.Guidance;
 import androidx.leanback.widget.GuidedAction;
-
+import android.util.Log;
+import android.view.View;
 import com.android.tv.common.ui.setup.SetupGuidedStepFragment;
 import com.android.tv.common.ui.setup.SetupMultiPaneFragment;
 import com.android.tv.tuner.R;
-
 import java.util.ArrayList;
 import java.util.List;
 

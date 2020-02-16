@@ -89,7 +89,7 @@ public abstract class DeveloperPreference<T> {
      * <p>Future calls to {@link #get(Context)} will return the default value.
      */
     public final void clear(Context context) {
-        getPreferences(context).edit().remove(mKey);
+        getPreferences(context).edit().remove(mKey).apply();
     }
 
     @Override

@@ -221,6 +221,11 @@
             android:exported="true"
             android:theme="@style/Theme.TV.Dvr.Browse.Details" />
         <activity
+            android:name="com.android.tv.dvr.ui.DvrRecordingSettingsActivity"
+            android:configChanges="keyboard|keyboardHidden"
+            android:exported="false"
+            android:theme="@style/Theme.TV.Dvr.Series.Settings.GuidedStep" />
+        <activity
             android:name="com.android.tv.dvr.ui.DvrSeriesSettingsActivity"
             android:configChanges="keyboard|keyboardHidden"
             android:theme="@style/Theme.TV.Dvr.Series.Settings.GuidedStep" />

@@ -24,7 +24,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.media.tv.TvContract;
+import android.media.tv.TvContract.Programs;
 import android.media.tv.TvInputInfo;
 import android.media.tv.TvInputManager;
 import android.media.tv.TvInputManager.TvInputCallback;
@@ -108,7 +108,7 @@ public abstract class TvApplication extends BaseApplication implements TvSinglet
     @Inject Lazy<ChannelDataManager> mChannelDataManager;
     private volatile ProgramDataManager mProgramDataManager;
     private PreviewDataManager mPreviewDataManager;
-    private DvrManager mDvrManager;
+    @Inject Lazy<DvrManager> mDvrManager;
     private DvrScheduleManager mDvrScheduleManager;
     @Inject Lazy<DvrDataManager> mDvrDataManager;
     private DvrWatchedPositionManager mDvrWatchedPositionManager;
@@ -213,7 +213,6 @@ public abstract class TvApplication extends BaseApplication implements TvSinglet
             }
             if (CommonFeatures.DVR.isEnabled(this)) {
                 mDvrScheduleManager = new DvrScheduleManager(this);
-                mDvrManager = new DvrManager(this);
                 mRecordingScheduler = RecordingScheduler.createScheduler(this);
             }
             mEpgFetcher.startRoutineService();
@@ -254,8 +253,9 @@ public abstract class TvApplication extends BaseApplication implements TvSinglet
 
     /** Returns the {@link DvrManager}. */
     @Override
+    @Nullable
     public DvrManager getDvrManager() {
-        return mDvrManager;
+        return (CommonFeatures.DVR.isEnabled(this)) ? mDvrManager.get() : null;
     }
 
     /** Returns the {@link DvrScheduleManager}. */
@@ -370,7 +370,9 @@ public abstract class TvApplication extends BaseApplication implements TvSinglet
 
     public void handleGuideKey() {
         if (!mMainActivityWrapper.isResumed()) {
-            startActivity(new Intent(Intent.ACTION_VIEW, TvContract.Programs.CONTENT_URI));
+            startActivity(
+                    new Intent(Intent.ACTION_VIEW, Programs.CONTENT_URI)
+                            .setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
         } else {
             mMainActivityWrapper.getMainActivity().getOverlayManager().toggleProgramGuide();
         }
@@ -385,7 +387,8 @@ public abstract class TvApplication extends BaseApplication implements TvSinglet
 
     /** Handles the global key KEYCODE_DVR. */
     public void handleDvrKey() {
-        startActivity(new Intent(this, DvrBrowseActivity.class));
+        startActivity(
+                new Intent(this, DvrBrowseActivity.class).setFlags(Intent.FLAG_ACTIVITY_NEW_TASK));
     }
 
     /** Handles the global key KEYCODE_TV_INPUT. */

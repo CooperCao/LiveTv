@@ -253,6 +253,20 @@ public final class DvrContract {
          */
         public static final String COLUMN_SERIES_RECORDING_ID = "series_recording_id";
 
+        /**
+         * The extra time in milliseconds to start recording before the program starts.
+         *
+         * <p>Type: INTEGER (long)
+         */
+        public static final String COLUMN_START_OFFSET_MILLIS = "start_offset_millis";
+
+        /**
+         * The extra time in milliseconds to end recording after the program ends.
+         *
+         * <p>Type: INTEGER (long)
+         */
+        public static final String COLUMN_END_OFFSET_MILLIS = "end_offset_millis";
+
         private Schedules() {}
     }
 
